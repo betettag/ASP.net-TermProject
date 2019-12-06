@@ -1,0 +1,61 @@
+﻿
+@model Player;
+@{
+    ViewData["Title"] = "Home Page";
+    ViewData["User"] = Model.Username;
+    ViewData["Score"] = Model.Score;
+}
+<html>
+<head>
+
+</head>
+<body>
+    <div class="text-center jumbotron" style="border-radius: 30px; background: black;">
+        <h1 class="display-4 text-white">Welcome to Internet Against Humanity</h1>
+        <p class="text-white">
+            The site is a community game of cards against humanity which is akin to apples to apples.
+            There are users and each user gets a hand (5 cards), and a prompt to “answer to”.
+            The prompt is sometimes a question but it does not have to be.
+            The user has to try to answer or give the best fitting or funniest card in order to
+            hopefully beat another user who had the same prompt and answers a different card.
+            The way the scores are settled is by voting.
+        </p>
+    </div>
+    <div class="card-deck">
+        <div class="card bg-dark text-center" style="width: 18rem;">
+            <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+            <div class="card-body text-white">
+                <h5 class="card-title">Stats</h5>
+                <p class="card-text">
+                    Player Count: @ViewBag.playerCount<br />
+                    Newest Player:
+                    @if (ViewBag.playerNew == "Guest")
+                    {
+                        ViewBag.playerNew = "Nobody :<";
+                    }
+                    @ViewBag.playerNew<br />
+                    Duels: @ViewBag.duelsCount
+                </p>
+                <a asp-controller="Home" asp-action="HighScores" class="btn btn-black">See the High Scores!</a>
+                <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+            </div>
+        </div>
+        <div class="card text-center" style="width: 18rem;">
+            <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+            </div>
+        </div>
+        <div class="card text-center" style="width: 18rem;">
+            <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
