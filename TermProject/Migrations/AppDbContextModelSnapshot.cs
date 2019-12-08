@@ -25,6 +25,8 @@ namespace TermProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CreatorID");
+
                     b.Property<int?>("DuelID");
 
                     b.Property<bool>("IsPrompt");

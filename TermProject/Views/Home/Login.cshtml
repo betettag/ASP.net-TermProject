@@ -1,6 +1,10 @@
-﻿
+﻿@model Player;
 @{
-    Layout = null;
+    ViewData["Title"] = "Home Page";
+    ViewData["Player"] = Model;
+    ViewData["Username"] = Model.Username;
+    ViewData["Score"] = Model.Score;
+    ViewData["BootStrap"] = true;
 }
 
 <!DOCTYPE html>
@@ -9,9 +13,8 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Login</title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/Login.css">
 </head>
 <body>
     <div class="sidenav">
@@ -33,7 +36,8 @@
                         <input type="password" class="form-control" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-black">Login</button>
-                    <button type="submit" class="btn btn-secondary">Register</button>
+                    <a class="btn btn-grey" href="@Url.Action("NewDuel","Home", ViewData["Player"]);">Register / Create a Duel</a>
+                    <a class="btn btn-white" href="@Url.Action("Index","Home", ViewData["Player"]);">Home</a>
                 </form>
             </div>
         </div>

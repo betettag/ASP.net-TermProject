@@ -14,5 +14,6 @@ namespace TermProject.Repositories
         List<Player> Players { get; }
         List<Tournament> Tournaments { get; }
         void AddPlayer(Duel duel, Player player);
+        void AddWhiteCard(Card whiteCard);
     }
 }

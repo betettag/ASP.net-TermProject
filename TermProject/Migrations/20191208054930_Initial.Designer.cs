@@ -10,7 +10,7 @@ using TermProject.Repositories;
 namespace TermProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191208043143_Initial")]
+    [Migration("20191208054930_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,8 @@ namespace TermProject.Migrations
                     b.Property<int>("CardID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CreatorID");
 
                     b.Property<int?>("DuelID");
 

@@ -1,0 +1,24 @@
+﻿@model Player;
+@{
+    ViewData["Title"] = "Guest User Error";
+    ViewData["Player"] = Model;
+    ViewData["Username"] = Model.Username;
+    ViewData["Score"] = Model.Score;
+    ViewData["BootStrap"] = true;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PlayerError</title>
+</head>
+<body class="text-lg-center text-md-center text-xl-center text-sm-center" >
+    <div class="jumbotron">
+        <h2>Currently a Guest User</h2>
+        Please login or Register by Creating a Duel and use the other features<br />
+        <a class="btn btn-action" href="@Url.Action("Login","Home", ViewData["Player"]);">Create a New Duel/Register</a><br/>
+            <a class="btn btn-action" href="@Url.Action("Login","Home", ViewData["Player"]);">Login</a>
+</div>
+</body>
+</html>

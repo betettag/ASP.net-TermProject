@@ -11,5 +11,6 @@ namespace TermProject.Models
         public bool IsPrompt { get; set; }//black cards
         public string Text { get; set; }
         public int PlayedCount { get; set; }
+        public int CreatorID { get; set; }
     }
 }

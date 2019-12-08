@@ -36,3 +36,4 @@ C:\Users\Admin\Desktop\cs295n\ASP.net-TermProject\TermProject\TermProject\obj\De
 C:\Users\Admin\Desktop\cs295n\ASP.net-TermProject\TermProject\TermProject\obj\Debug\netcoreapp2.2\Razor\Views\Home\AddCard.cshtml.g.cs
 C:\Users\Admin\Desktop\cs295n\ASP.net-TermProject\TermProject\TermProject\obj\Debug\netcoreapp2.2\Razor\Views\Home\Voting.cshtml.g.cs
 C:\Users\Admin\Desktop\cs295n\ASP.net-TermProject\TermProject\TermProject\obj\Debug\netcoreapp2.2\Razor\Views\Home\AllCards.cshtml.g.cs
+C:\Users\Admin\Desktop\cs295n\ASP.net-TermProject\TermProject\TermProject\obj\Debug\netcoreapp2.2\Razor\Views\Home\PlayerError.cshtml.g.cs

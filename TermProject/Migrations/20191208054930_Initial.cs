@@ -50,6 +50,7 @@ namespace TermProject.Migrations
                     IsPrompt = table.Column<bool>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     PlayedCount = table.Column<int>(nullable: false),
+                    CreatorID = table.Column<int>(nullable: false),
                     DuelID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
