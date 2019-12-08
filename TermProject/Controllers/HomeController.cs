@@ -23,11 +23,11 @@ namespace TermProject.Controllers
         {
             if (player.PlayerID == 0 || player.Username == null)
             {
-                player = Repository.Players[0];
+                player = Repository.Players[0];//first time loading gets guest
             }
             ViewBag.playerCount = Repository.Players.Count()-1;
-            ViewBag.playerNew = Repository.Players.Last().Username;
-            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count()-1;
+            ViewBag.playerNew = Repository.Players.Last().Username;//random stats
+            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count()-1;//guest doesnt count
             return View(player);
         }
         public IActionResult Login(Player p)
@@ -36,11 +36,18 @@ namespace TermProject.Controllers
             {
                 p = Repository.Players[0];
             }
+            if (p.Username != "Guest" && p.PlayerID != 1 && p.Score != 0)
+                return View("Index", p);//not going to let a user login again
             return View(p);
         }
+        //public IActionResult Logout(Player p)
+        //{
+        //        p = Repository.Players[0];
+        //        return View("Index", p);//logout is user=guest not sure if im going to implement this
+        //}
         [HttpPost]
         public IActionResult LoginValidation(Player p)
-        {//getting right user
+        {//getting right user except guest
             p = Repository.Players.Find(player => player.Username == p.Username && player.Password == p.Password && player.PlayerID != 1);
             if(p == null){
                 p = Repository.Players[0];
@@ -48,7 +55,7 @@ namespace TermProject.Controllers
             }
             return View("Index", p);//returns home for a valid user
         }
-        public IActionResult Voting(Player p)
+        public IActionResult Voting(Player p)//later tm
         {
             return View(p);
         }
@@ -76,7 +83,7 @@ namespace TermProject.Controllers
                 const string PatternTemplate = @"\b({0})(s?)\b";//censoring words
                 const RegexOptions Options = RegexOptions.IgnoreCase;//pattern from the insternet
 
-                string[] badWords = new[] { "fuck", "bitch", "ass", "fucker" };
+                string[] badWords = new[] { "fuck", "bitch", "ass", "fucker","fucking", "flipping", "flippin", "damm" };
 
                 IEnumerable<Regex> badWordMatchers = badWords.
                     Select(x => new Regex(string.Format(PatternTemplate, x), Options));
@@ -117,18 +124,24 @@ namespace TermProject.Controllers
                 Cards = Repository.Cards, //passing the player and cards
                 player = p
             };
-            return View(viewModel);
+            if(p.IsDueling == false)//not going to let a user duel twice
+                return View(viewModel);
+            return View("Index", p);
         }
 
         public ActionResult HighScores(Player p)
         {
+            if (p.PlayerID == 0 || p.Username == null)
+            {
+                p = Repository.Players[0];
+            }
             var viewModel = new HighScoresViewModel();
             viewModel.player = p;
-            if (Repository.Players.Count() > 1)
+            if (Repository.Players.Count() > 1)//passing player and list of players
             {
                 viewModel.Players = Repository.Players;
             }
-            else { viewModel.Players = new List<Player>(); }
+            else { viewModel.Players = new List<Player>(); }//getting empty list if only guest :<
              
             return View(viewModel);
         }
