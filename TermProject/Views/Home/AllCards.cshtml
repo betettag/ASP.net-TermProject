@@ -1,0 +1,46 @@
+﻿
+@model TermProject.ViewModels.AllCardsViewModels
+@{
+    ViewData["Title"] = "All Cards";
+    ViewData["Username"] = Model.player.Username;
+    ViewData["Player"]= Model;
+    ViewData["Score"] = Model.player.Score;
+    ViewData["BootStrap"] = true;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AllCards</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <style>
+        .card-body {
+            min-height: 300px;
+            min-width: 300px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-2">
+        <h2 class="font-weight-light">All White Cards</h2>
+        <div class="d-flex flex-row flex-nowrap">
+            @foreach (Card c in Model.Cards)
+            {
+                if (c.IsPrompt == true)
+                {
+                    <div class="card card-body white-text" style="background-color: black">@c.Text</div>
+                }
+                else
+                {
+                    <div class="card card-body btn-outline-black">@c.Text</div>
+                }
+
+            }
+            <div class="card card-body btn-outline-black">This Card Wins ;P</div>
+        </div>
+    </div>
+</body>
+</html>

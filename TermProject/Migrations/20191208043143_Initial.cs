@@ -8,21 +8,6 @@ namespace TermProject.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cards",
-                columns: table => new
-                {
-                    CardID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    IsPrompt = table.Column<bool>(nullable: false),
-                    Text = table.Column<string>(nullable: true),
-                    PlayedCount = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cards", x => x.CardID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tournaments",
                 columns: table => new
                 {
@@ -49,17 +34,33 @@ namespace TermProject.Migrations
                 {
                     table.PrimaryKey("PK_Duels", x => x.DuelID);
                     table.ForeignKey(
-                        name: "FK_Duels_Cards_PromptID",
-                        column: x => x.PromptID,
-                        principalTable: "Cards",
-                        principalColumn: "CardID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Duels_Tournaments_TournamentID",
                         column: x => x.TournamentID,
                         principalTable: "Tournaments",
                         principalColumn: "TournamentID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    CardID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    IsPrompt = table.Column<bool>(nullable: false),
+                    Text = table.Column<string>(nullable: true),
+                    PlayedCount = table.Column<int>(nullable: false),
+                    DuelID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.CardID);
+                    table.ForeignKey(
+                        name: "FK_Cards_Duels_DuelID",
+                        column: x => x.DuelID,
+                        principalTable: "Duels",
+                        principalColumn: "DuelID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,18 +82,17 @@ namespace TermProject.Migrations
                 {
                     table.PrimaryKey("PK_Players", x => x.PlayerID);
                     table.ForeignKey(
-                        name: "FK_Players_Cards_CardID",
-                        column: x => x.CardID,
-                        principalTable: "Cards",
-                        principalColumn: "CardID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Players_Duels_DuelID",
                         column: x => x.DuelID,
                         principalTable: "Duels",
                         principalColumn: "DuelID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_DuelID",
+                table: "Cards",
+                column: "DuelID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Duels_PromptID",
@@ -105,18 +105,25 @@ namespace TermProject.Migrations
                 column: "TournamentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Players_CardID",
-                table: "Players",
-                column: "CardID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Players_DuelID",
                 table: "Players",
                 column: "DuelID");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Duels_Cards_PromptID",
+                table: "Duels",
+                column: "PromptID",
+                principalTable: "Cards",
+                principalColumn: "CardID",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Cards_Duels_DuelID",
+                table: "Cards");
+
             migrationBuilder.DropTable(
                 name: "Players");
 

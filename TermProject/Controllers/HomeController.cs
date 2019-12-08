@@ -42,7 +42,11 @@ namespace TermProject.Controllers
         }
         public IActionResult AllCards(Player p)
         {
-            return View();
+            var viewModel = new AllCardsViewModels() {
+                Cards = Repository.Cards,
+                player = p
+            };
+            return View(viewModel);
         }
 
         public IActionResult NewDuel(Player p)

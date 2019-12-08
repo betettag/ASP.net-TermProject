@@ -15,6 +15,7 @@ namespace TermProject.Repositories
             context = appDbContext;
         }
         public List<Card> WhiteCards => context.Cards.Where(c => c.IsPrompt == false).ToList();
+        public List<Card> Cards => context.Cards.ToList();
         public List<Card> Prompts => context.Cards.Where(c => c.IsPrompt == true).ToList();
         public List<Player> Players => context.Players.ToList();
         public List <Tournament> Tournaments => (context.Tournaments

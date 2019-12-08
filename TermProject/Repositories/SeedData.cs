@@ -13,24 +13,34 @@ namespace TermProject.Repositories
             if (!context.Tournaments.Any())
             {
                 Card whitecard = new Card();
-                whitecard.Text = "testwhiteCard";
+                whitecard.Text = "Extremely White Card";
                 whitecard.IsPrompt = false;
+
+                Card whitecard2 = new Card();
+                whitecard2.Text = "Undenialbly White Card";
+                whitecard2.IsPrompt = false;
+
                 Card blackcard = new Card();
-                blackcard.Text = "testblackCard";
+                blackcard.Text = "Pick The Whitest Card...";
                 blackcard.IsPrompt = true;
+
                 Player guestPlayer = new Player()
                 {
                     Username = "Guest",
                     Score = 0,
                     IsDueling = false,
                     Voted = false,
-                    CardChosen = whitecard
+                    
                 };
 
                 Duel guestDuel = new Duel();
                 guestDuel.Players = new List<Player>();
                 guestDuel.Players.Add(guestPlayer);
                 guestDuel.Prompt = blackcard;
+                guestDuel.Cards = new List<Card>();
+                guestDuel.Cards.Add(whitecard);
+                guestDuel.Cards.Add(whitecard2);
+
                 Tournament FirstTournament = new Tournament();
                 FirstTournament.Duels = new List<Duel>();
                 FirstTournament.Duels.Add(guestDuel);

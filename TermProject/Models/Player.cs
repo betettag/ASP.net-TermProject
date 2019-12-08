@@ -11,7 +11,6 @@ namespace TermProject.Models
         //public List<Card> Hand = new List<Card>();
         public string Username { get; set; }
         public string Password { get; set; }
-        public Card CardChosen { get; set; }
         public int CardID { get; set; }
         public int Score { get; set; }
         public int Votes { get; set; }

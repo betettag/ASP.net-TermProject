@@ -25,6 +25,8 @@ namespace TermProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("DuelID");
+
                     b.Property<bool>("IsPrompt");
 
                     b.Property<int>("PlayedCount");
@@ -32,6 +34,8 @@ namespace TermProject.Migrations
                     b.Property<string>("Text");
 
                     b.HasKey("CardID");
+
+                    b.HasIndex("DuelID");
 
                     b.ToTable("Cards");
                 });
@@ -79,8 +83,6 @@ namespace TermProject.Migrations
 
                     b.HasKey("PlayerID");
 
-                    b.HasIndex("CardID");
-
                     b.HasIndex("DuelID");
 
                     b.ToTable("Players");
@@ -101,6 +103,13 @@ namespace TermProject.Migrations
                     b.ToTable("Tournaments");
                 });
 
+            modelBuilder.Entity("TermProject.Models.Card", b =>
+                {
+                    b.HasOne("TermProject.Models.Duel")
+                        .WithMany("Cards")
+                        .HasForeignKey("DuelID");
+                });
+
             modelBuilder.Entity("TermProject.Models.Duel", b =>
                 {
                     b.HasOne("TermProject.Models.Card", "Prompt")
@@ -116,11 +125,6 @@ namespace TermProject.Migrations
 
             modelBuilder.Entity("TermProject.Models.Player", b =>
                 {
-                    b.HasOne("TermProject.Models.Card", "CardChosen")
-                        .WithMany()
-                        .HasForeignKey("CardID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("TermProject.Models.Duel")
                         .WithMany("Players")
                         .HasForeignKey("DuelID");
