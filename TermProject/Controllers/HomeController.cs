@@ -51,6 +51,7 @@ namespace TermProject.Controllers
             p = Repository.Players.Find(player => player.Username == p.Username && player.Password == p.Password && player.PlayerID != 1);
             if(p == null){
                 p = Repository.Players[0];
+                ModelState.AddModelError("Validation", "Wrong username or pass");
                 RedirectToAction("Login");//Invalid therefore redirect to login again
             }
             return View("Index", p);//returns home for a valid user
@@ -60,7 +61,7 @@ namespace TermProject.Controllers
             Repository.ResetTournament();
             p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
 
-            if (p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
+            if (p == null || p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
             {
                 p = Repository.Players[0];
                 return View("PlayerError", p);//error view to login or create duel
@@ -143,7 +144,7 @@ namespace TermProject.Controllers
             Repository.ResetTournament();
             p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
 
-            if (p.PlayerID == 0 || p.Username == null)
+            if (p == null || p.PlayerID == 0 || p.Username == null)
             {
                 p = Repository.Players[0];
             }
@@ -184,12 +185,10 @@ namespace TermProject.Controllers
             }
             var viewModel = new HighScoresViewModel();
             viewModel.player = p;
-            if (Repository.Players.Count() > 1)//passing player and list of players
-            {
-                viewModel.Players = Repository.Players;
-            }
-            else { viewModel.Players = new List<Player>(); }//getting empty list if only guest :<
-             
+            viewModel.Players = Repository.Players;//passing player and list of players
+            viewModel.Players.RemoveAt(0); //not passing guest :<
+
+
             return View(viewModel);
         }
 

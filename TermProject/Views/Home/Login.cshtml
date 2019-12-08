@@ -23,16 +23,17 @@
         </div>
     </div>
     <div class="main">
+        @Html.ValidationMessage("Validation")
         <div class="col-md-6 col-sm-12">
-            <div class="login-form">
-                <form>
+            <div class="login-form" >
+                <form asp-action="LoginValidation" method="post">
                     <div class="form-group">
                         <label>User Name</label>
-                        <input type="text" class="form-control" placeholder="User Name">
+                        <input asp-for="Username" type="text" class="form-control" placeholder="User Name">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" class="form-control" placeholder="Password">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-black">Login</button>
                     <a class="btn btn-grey" href="@Url.Action("NewDuel","Home", ViewData["Player"]);">Register / Create a Duel</a>

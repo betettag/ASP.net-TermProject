@@ -39,7 +39,8 @@ namespace TermProject.Repositories
                     Score = 1,
                     IsDueling = true,
                     Voted = false,
-                    DuelCard = whitecard
+                    DuelCard = whitecard,
+                    Password = "pass"
                 };
 
                 Duel guestDuel = new Duel();
