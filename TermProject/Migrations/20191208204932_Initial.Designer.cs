@@ -10,7 +10,7 @@ using TermProject.Repositories;
 namespace TermProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191208081506_Initial")]
+    [Migration("20191208204932_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,8 +29,6 @@ namespace TermProject.Migrations
 
                     b.Property<int>("CreatorID");
 
-                    b.Property<int?>("DuelID");
-
                     b.Property<bool>("IsPrompt");
 
                     b.Property<int>("PlayedCount");
@@ -38,8 +36,6 @@ namespace TermProject.Migrations
                     b.Property<string>("Text");
 
                     b.HasKey("CardID");
-
-                    b.HasIndex("DuelID");
 
                     b.ToTable("Cards");
                 });
@@ -50,7 +46,7 @@ namespace TermProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PromptID");
+                    b.Property<int>("CardID");
 
                     b.Property<int>("TournamentID");
 
@@ -62,7 +58,7 @@ namespace TermProject.Migrations
 
                     b.HasKey("DuelID");
 
-                    b.HasIndex("PromptID");
+                    b.HasIndex("CardID");
 
                     b.HasIndex("TournamentID");
 
@@ -83,6 +79,8 @@ namespace TermProject.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<int>("PromtID");
+
                     b.Property<int>("Score");
 
                     b.Property<string>("Username");
@@ -90,6 +88,8 @@ namespace TermProject.Migrations
                     b.Property<bool>("Voted");
 
                     b.HasKey("PlayerID");
+
+                    b.HasIndex("CardID");
 
                     b.HasIndex("DuelID");
 
@@ -102,6 +102,8 @@ namespace TermProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("ExpiryTime");
+
                     b.Property<int>("PlayerCount");
 
                     b.Property<int>("VoteCount");
@@ -111,18 +113,11 @@ namespace TermProject.Migrations
                     b.ToTable("Tournaments");
                 });
 
-            modelBuilder.Entity("TermProject.Models.Card", b =>
-                {
-                    b.HasOne("TermProject.Models.Duel")
-                        .WithMany("Cards")
-                        .HasForeignKey("DuelID");
-                });
-
             modelBuilder.Entity("TermProject.Models.Duel", b =>
                 {
                     b.HasOne("TermProject.Models.Card", "Prompt")
                         .WithMany()
-                        .HasForeignKey("PromptID")
+                        .HasForeignKey("CardID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TermProject.Models.Tournament")
@@ -133,6 +128,11 @@ namespace TermProject.Migrations
 
             modelBuilder.Entity("TermProject.Models.Player", b =>
                 {
+                    b.HasOne("TermProject.Models.Card", "DuelCard")
+                        .WithMany()
+                        .HasForeignKey("CardID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("TermProject.Models.Duel")
                         .WithMany("Players")
                         .HasForeignKey("DuelID");

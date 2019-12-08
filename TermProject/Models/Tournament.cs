@@ -14,6 +14,8 @@ namespace TermProject.Models
         public int PlayerCount { get; set; }
         public int VoteCount { get; set; }
 
+        public DateTime ExpiryTime { get; set; }
+
 
     }
 }

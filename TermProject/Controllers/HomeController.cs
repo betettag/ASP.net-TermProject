@@ -57,6 +57,9 @@ namespace TermProject.Controllers
         }
         public IActionResult Voting(Player p)//later tm
         {
+            Repository.ResetTournament();
+            p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
+
             if (p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
             {
                 p = Repository.Players[0];
@@ -137,6 +140,9 @@ namespace TermProject.Controllers
 
         public IActionResult NewDuel(Player p)
         {
+            Repository.ResetTournament();
+            p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
+
             if (p.PlayerID == 0 || p.Username == null)
             {
                 p = Repository.Players[0];
@@ -147,16 +153,26 @@ namespace TermProject.Controllers
                 Cards = Repository.Cards, //passing the player and cards
                 player = p
             };
-            if(p.IsDueling == false)//not going to let a user duel twice
+            
+            Repository.ResetTournament();
+            if (p.IsDueling == false)//not going to let a user duel twice
                 return View(viewModel);
             return View("Index", p);
         }
         [HttpPost]
-        public IActionResult NewDuelPost(Duel d) 
+        public IActionResult NewDuelPost(Player player) 
         {
-            
-            Repository.AddPlayerToDuel(d);
-            Player player = Repository.Players.Find(p => p.PlayerID == d.VoterID);//reusing variable
+            if (Repository.Players.Where(p => p.Username == player.Username) != null)
+            {
+                var viewModel = new AllCardsViewModels()
+                {
+                    Cards = Repository.Cards, //passing the player and cards
+                    player = player
+                };
+                return View(viewModel);//return view again if player has been found to avoid duplicates
+            }
+            Repository.ResetTournament();//reset tournament if a week has passed. keeps players
+            player = Repository.AddPlayerToDuel(player);//reusing variable and adding player to duel
             return View("Index", player);
         }
 
