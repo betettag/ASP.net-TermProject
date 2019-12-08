@@ -5,6 +5,19 @@
     ViewData["Username"] = Model.Username;
     ViewData["Score"] = Model.Score;
     ViewData["BootStrap"] = true;
-}
-
-<p>Adding a card soon TM</p>
+    //Model.DuelCard = new Card();
+} 
+<body>
+    <div class="jumbotron text-center white-text" style="background-color: black">
+        <h2 class="text-white">Add a card or else... :<</h2>
+            @Html.ValidationMessage("Validation")
+            <form asp-action="AddCardValidation" method="post">
+                <div class="form-group">
+                    <input asp-for="DuelCard.CreatorID" hidden value="@Model.PlayerID">
+                    <label>Card Text</label>
+                    <input asp-for="DuelCard.Text" type="text" class="form-control" placeholder="Please family friendly XD">
+                </div>
+                <button type="submit" class="btn btn-black">Submit</button>
+            </form>
+    </div>
+</body>

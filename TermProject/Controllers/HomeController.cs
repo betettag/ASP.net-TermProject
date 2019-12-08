@@ -95,15 +95,21 @@ namespace TermProject.Controllers
             {
                 return View("PlayerError", p);
             }
+            Card card = new Card()
+            {
+                CreatorID = p.PlayerID,
+                IsPrompt = false
+            };
+            p.DuelCard = card;//setting card to be passed
             return View(p);
         }
         [HttpPost]
-        public IActionResult AddCard(Card c)
+        public IActionResult AddCardValidation(Player player)
         {
-            Player player = Repository.Players.Find(p => p.PlayerID == c.CreatorID);//getting player from player id
+            //Player player = Repository.Players.Find(p => p.PlayerID == p.DuelCard.CreatorID);//getting player from player id
 
-            if (c.Text != "" || c.Text != null || c.CreatorID != 0 
-                && Repository.WhiteCards.Contains(c) == false)//do not write duplicate or bad card
+            if (player.DuelCard.Text != "" || player.DuelCard.Text != null || player.DuelCard.CreatorID != 0 
+                && Repository.WhiteCards.Where(c => c.Text == player.DuelCard.Text) != null)//do not write duplicate or bad card
             {
                 const string CensoredText = "[Censored]";
                 const string PatternTemplate = @"\b({0})(s?)\b";//censoring words
@@ -114,16 +120,24 @@ namespace TermProject.Controllers
                 IEnumerable<Regex> badWordMatchers = badWords.
                     Select(x => new Regex(string.Format(PatternTemplate, x), Options));
 
-                string input = c.Text;
+                string input = player.DuelCard.Text;
 
                 string output = badWordMatchers.//matching
                 Aggregate(input, (current, matcher) => matcher.Replace(current, CensoredText));
 
-                c.Text = output;//replacing text
-                c.IsPrompt = false;
-                Repository.AddWhiteCard(c);//adding white card
-                return View("AllCards", player);
+                player.DuelCard.Text = output;//replacing text
+                player.DuelCard.IsPrompt = false;
+                Repository.AddWhiteCard(player.DuelCard);//adding white card
+                player = Repository.Players.Find(p => p.PlayerID == player.DuelCard.CreatorID);
+                ModelState.AddModelError("Validation", "Card Added ");
+                var viewModel = new AllCardsViewModels()
+                {
+                    Cards = Repository.Cards, //passing the player and cards
+                    player = player
+                };
+                return View("AllCards", viewModel);
             }
+            ModelState.AddModelError("Validation", "Card Error ");
             return View("AddCard", player);
         }
         public IActionResult AllCards(Player p)
