@@ -19,7 +19,7 @@ namespace TermProject.Controllers
         }
         public IActionResult Index(Player player)
         {
-            if (player == null)
+            if (player.PlayerID == 0 || player.Username == null)
             {
                 player = Repository.Players[0];
             }
@@ -28,17 +28,29 @@ namespace TermProject.Controllers
             ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count()-1;
             return View(player);
         }
-        public IActionResult Login()
+        public IActionResult Login(Player p)
+        {
+            return View();
+        }
+        public IActionResult Voting(Player p)
+        {
+            return View();
+        }
+        public IActionResult AddCard(Player p)
+        {
+            return View();
+        }
+        public IActionResult AllCards(Player p)
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult NewDuel(Player p)
         {
             return View();
         }
 
-        public IActionResult HighScores(Player p)
+        public ActionResult HighScores(Player p)
         {
             var viewModel = new HighScoresViewModel();
             viewModel.player = p;

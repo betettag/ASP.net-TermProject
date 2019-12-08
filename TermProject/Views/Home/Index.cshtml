@@ -2,8 +2,10 @@
 @model Player;
 @{
     ViewData["Title"] = "Home Page";
-    ViewData["User"] = Model.Username;
+    ViewData["Player"]= Model;
+    ViewData["Username"]= Model.Username;
     ViewData["Score"] = Model.Score;
+    ViewData["BootStrap"] = true;
 }
 <html>
 <head>

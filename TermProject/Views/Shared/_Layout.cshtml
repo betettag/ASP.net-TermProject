@@ -10,13 +10,10 @@
             padding: 0;
         }
     </style>
-    <link href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Light.woff2">
-    <link href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.woff2">
-    <link href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.ttf">
-    <link href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Regular.ttf">
     <link rel="stylesheet" type="text/css" href="/css/compiled-4.8.11.min.css">
     <script src="https://kit.fontawesome.com/17b0e37242.js" crossorigin="anonymous"></script>
     <script src="~/js/clipboard.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Roboto+Slab&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -30,36 +27,58 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link"asp-controller="Home" asp-action="HighScores">
+                        <a class="nav-link" href="@Url.Action("HighScores","Home", ViewData["Player"]);">
                             HightScores
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
+                        <a class="nav-link" href="@Url.Action("Duel","Home", ViewData["Player"]);">
+                            New Duel
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
+                        <a class="nav-link" href="@Url.Action("Voting","Home", ViewData["Player"]);">
+                            Voting
+                        </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-555" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
-                            Dropdown
+                            Cards Dropdown
                         </a>
                         <div class="dropdown-menu dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-555">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="#">See all cards</a>
+                            <a class="dropdown-item" href="#">Add a Card</a>
+                            <!--<a class="dropdown-item" href="#">Something else here</a>-->
                         </div>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto nav-flex-icons">
                     <li class="nav-item">
-                        <a class="nav-link waves-effect waves-light">
-                            @ViewData["User"]Score @ViewData["Score"]
-                            <i class="fas fa-check-circle"></i>
-                        </a>
-                    </li>
+
+                        @if ((string)ViewData["Username"] == "Guest" || (string)ViewData["Score"] == "0")
+                        {
+                            <a class="nav-link waves-effect waves-light" href="@Url.Action("Login","Home", ViewData["Player"]);">
+                                @("Hello! ")
+                                @ViewData["Username"]
+                                @(" - Please Login :<")
+                                <i class="fas fa-check-circle"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="nav-link waves-effect waves-light" href="https://www.chicagotribune.com/resizer/8yoALwU0WPtzgBVBbMloP7mgxfk=/1200x0/top/www.trbimg.com/img-5cf45ff2/turbine/ct-life-ok-sign-racist-05282019">
+                            @("Hello! ")
+                            @ViewData["Username"]
+                            @(" Score: ")
+                            @ViewData["Username"]
+                                <i class="fas fa-check-circle"></i>
+                            </a>
+                        }
+                        
+
+                        </li>
                     <li class="nav-item avatar dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
@@ -90,30 +109,33 @@
             &copy; 2019 - TermProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-
-    <environment include="Development">
-        <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.ttf">
-        <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Regular.ttf">
-        <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Light.woff2">
-        <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.woff2">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
-        </script>
-    </environment>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    @if ((bool)ViewData["BootStrap"] == true)
+    {
+        <environment include="Development">
+            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.ttf">
+            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Regular.ttf">
+            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Light.woff2">
+            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.woff2">
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                    asp-fallback-test="window.jQuery"
+                    crossorigin="anonymous"
+                    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+            </script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                    crossorigin="anonymous"
+                    integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+            </script>
+        </environment>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }
+    
 
     @RenderSection("Scripts", required: false)
 </body>
