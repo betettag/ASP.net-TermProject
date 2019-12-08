@@ -1,7 +1,12 @@
-﻿
+﻿@model TermProject.ViewModels.AllCardsViewModels
 @{
-    Layout = null;
+    ViewData["Title"] = "All Cards";
+    ViewData["Username"] = Model.player.Username;
+    ViewData["Player"] = Model;
+    ViewData["Score"] = Model.player.Score;
+    ViewData["BootStrap"] = true;
 }
+
 
 <!DOCTYPE html>
 
@@ -11,5 +16,7 @@
     <title>NewDuel</title>
 </head>
 <body>
+    <h2>Star A New Duel</h2>
+    <p>please vote later :<   <=== or ill be sad (you cant vote for yourself)</p>
 </body>
 </html>

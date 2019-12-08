@@ -1,6 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+﻿@model Player;
+@{
+    ViewData["Title"] = "Home Page";
+    ViewData["Player"] = Model;
+    ViewData["Username"] = Model.Username;
+    ViewData["Score"] = Model.Score;
+    ViewData["BootStrap"] = true;
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<p>Adding a card soon TM</p>

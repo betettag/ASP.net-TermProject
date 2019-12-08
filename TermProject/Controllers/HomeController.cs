@@ -38,9 +38,19 @@ namespace TermProject.Controllers
             }
             return View(p);
         }
+        [HttpPost]
+        public IActionResult LoginValidation(Player p)
+        {//getting right user
+            p = Repository.Players.Find(player => player.Username == p.Username && player.Password == p.Password && player.PlayerID != 1);
+            if(p == null){
+                p = Repository.Players[0];
+                RedirectToAction("Login");//Invalid therefore redirect to login again
+            }
+            return View("Index", p);//returns home for a valid user
+        }
         public IActionResult Voting(Player p)
         {
-            return View();
+            return View(p);
         }
         public IActionResult AddCard(Player p)
         {
@@ -57,10 +67,11 @@ namespace TermProject.Controllers
         [HttpPost]
         public IActionResult AddCard(Card c)
         {
-            if(c.Text != "" || c.Text == null || c.CreatorID == 0)
-            {
-                Player player = Repository.Players.Find(p => p.PlayerID == c.CreatorID);//getting player from player id
+            Player player = Repository.Players.Find(p => p.PlayerID == c.CreatorID);//getting player from player id
 
+            if (c.Text != "" || c.Text == null || c.CreatorID == 0 
+                && Repository.WhiteCards.Contains(c) == false)//do not write duplicate or bad card
+            {
                 const string CensoredText = "[Censored]";
                 const string PatternTemplate = @"\b({0})(s?)\b";//censoring words
                 const RegexOptions Options = RegexOptions.IgnoreCase;//pattern from the insternet
@@ -80,7 +91,7 @@ namespace TermProject.Controllers
                 Repository.AddWhiteCard(c);//adding white card
                 return View("AllCards", player);
             }
-            return View("Index");
+            return View("AddCard", player);
         }
         public IActionResult AllCards(Player p)
         {
@@ -89,7 +100,7 @@ namespace TermProject.Controllers
                 p = Repository.Players[0];
             }
             var viewModel = new AllCardsViewModels() {
-                Cards = Repository.Cards,
+                Cards = Repository.Cards, //passing the player and cards
                 player = p
             };
             return View(viewModel);
@@ -97,7 +108,16 @@ namespace TermProject.Controllers
 
         public IActionResult NewDuel(Player p)
         {
-            return View();
+            if (p.PlayerID == 0 || p.Username == null)
+            {
+                p = Repository.Players[0];
+            }
+            var viewModel = new AllCardsViewModels()
+            {
+                Cards = Repository.Cards, //passing the player and cards
+                player = p
+            };
+            return View(viewModel);
         }
 
         public ActionResult HighScores(Player p)
