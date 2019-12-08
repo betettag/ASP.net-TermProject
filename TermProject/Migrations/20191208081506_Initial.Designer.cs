@@ -10,7 +10,7 @@ using TermProject.Repositories;
 namespace TermProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191208054930_Initial")]
+    [Migration("20191208081506_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,12 @@ namespace TermProject.Migrations
 
                     b.Property<int>("TournamentID");
 
+                    b.Property<int>("VoterID");
+
+                    b.Property<int>("VotesP1");
+
+                    b.Property<int>("VotesP2");
+
                     b.HasKey("DuelID");
 
                     b.HasIndex("PromptID");
@@ -82,8 +88,6 @@ namespace TermProject.Migrations
                     b.Property<string>("Username");
 
                     b.Property<bool>("Voted");
-
-                    b.Property<int>("Votes");
 
                     b.HasKey("PlayerID");
 

@@ -28,7 +28,10 @@ namespace TermProject.Migrations
                     DuelID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     PromptID = table.Column<int>(nullable: false),
-                    TournamentID = table.Column<int>(nullable: false)
+                    TournamentID = table.Column<int>(nullable: false),
+                    VoterID = table.Column<int>(nullable: false),
+                    VotesP1 = table.Column<int>(nullable: false),
+                    VotesP2 = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,7 +77,6 @@ namespace TermProject.Migrations
                     Password = table.Column<string>(nullable: true),
                     CardID = table.Column<int>(nullable: false),
                     Score = table.Column<int>(nullable: false),
-                    Votes = table.Column<int>(nullable: false),
                     Voted = table.Column<bool>(nullable: false),
                     IsDueling = table.Column<bool>(nullable: false),
                     DuelID = table.Column<int>(nullable: true)

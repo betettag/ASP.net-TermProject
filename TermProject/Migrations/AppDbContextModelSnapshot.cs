@@ -52,6 +52,12 @@ namespace TermProject.Migrations
 
                     b.Property<int>("TournamentID");
 
+                    b.Property<int>("VoterID");
+
+                    b.Property<int>("VotesP1");
+
+                    b.Property<int>("VotesP2");
+
                     b.HasKey("DuelID");
 
                     b.HasIndex("PromptID");
@@ -80,8 +86,6 @@ namespace TermProject.Migrations
                     b.Property<string>("Username");
 
                     b.Property<bool>("Voted");
-
-                    b.Property<int>("Votes");
 
                     b.HasKey("PlayerID");
 

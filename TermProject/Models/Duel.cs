@@ -13,5 +13,8 @@ namespace TermProject.Models
         public int TournamentID { get; set; }
         public List<Player> Players { get; set; }
         public List<Card> Cards { get; set; }
+        public int VoterID { get; set; }
+        public int VotesP1 { get; set; }
+        public int VotesP2 { get; set; }
     }
 }

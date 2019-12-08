@@ -57,7 +57,29 @@ namespace TermProject.Controllers
         }
         public IActionResult Voting(Player p)//later tm
         {
-            return View(p);
+            if (p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
+            {
+                p = Repository.Players[0];
+                return View("PlayerError", p);//error view to login or create duel
+            }
+            else if (p.PlayerID == 1 || p.Username == "Guest" || p.Score == 0)//if guest then still error
+            {
+                return View("PlayerError", p);
+            }
+            var viewModel = new VotingViewModel();
+            viewModel.player = p;//passing player and list of duels
+            viewModel.Duels = Repository.Tournaments[0].Duels;
+
+            return View(viewModel);
+        }
+        [HttpGet]
+        public IActionResult Voted(Duel d)//post for after voting
+        {
+
+            Player player = Repository.Players.Find(p => p.PlayerID == d.VoterID);//getting player from player id
+            player.Voted = true; //player has voted
+            Repository.UpdateDuelVotes(d);
+            return View("Index",player);
         }
         public IActionResult AddCard(Player p)
         {
@@ -76,7 +98,7 @@ namespace TermProject.Controllers
         {
             Player player = Repository.Players.Find(p => p.PlayerID == c.CreatorID);//getting player from player id
 
-            if (c.Text != "" || c.Text == null || c.CreatorID == 0 
+            if (c.Text != "" || c.Text != null || c.CreatorID != 0 
                 && Repository.WhiteCards.Contains(c) == false)//do not write duplicate or bad card
             {
                 const string CensoredText = "[Censored]";
@@ -119,6 +141,7 @@ namespace TermProject.Controllers
             {
                 p = Repository.Players[0];
             }
+
             var viewModel = new AllCardsViewModels()
             {
                 Cards = Repository.Cards, //passing the player and cards
@@ -127,6 +150,14 @@ namespace TermProject.Controllers
             if(p.IsDueling == false)//not going to let a user duel twice
                 return View(viewModel);
             return View("Index", p);
+        }
+        [HttpPost]
+        public IActionResult NewDuelPost(Duel d) 
+        {
+            
+            Repository.AddPlayerToDuel(d);
+            Player player = Repository.Players.Find(p => p.PlayerID == d.VoterID);//reusing variable
+            return View("Index", player);
         }
 
         public ActionResult HighScores(Player p)

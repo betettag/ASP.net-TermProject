@@ -15,5 +15,7 @@ namespace TermProject.Repositories
         List<Tournament> Tournaments { get; }
         void AddPlayer(Duel duel, Player player);
         void AddWhiteCard(Card whiteCard);
+        void UpdateDuelVotes(Duel duel);
+        void AddPlayerToDuel(Duel duel);
     }
 }

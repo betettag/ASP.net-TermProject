@@ -28,12 +28,14 @@ namespace TermProject.Repositories
             context.SaveChanges();
         }
 
-        public void AddDuel(Duel duel, Player player)
+        public void AddPlayerToDuel(Duel duel)
         {
-            if (duel.Players.Any())//if duel not empty add player to list
+            Player player = Players.Find(p => p.PlayerID == duel.VoterID);//getting player from id
+            duel = context.Duels.Find(Players.Count() != 2);//getting duel that needs a player
+            if (duel != null)//if duel not empty add player to list
             {
-                context.Duels.Where(d => (d.DuelID == duel.DuelID))
-                    .FirstOrDefault();
+                duel.Players.Add(player);
+                context.Duels.Update(duel);//addplayer and update
             }
             else
             {
@@ -42,15 +44,13 @@ namespace TermProject.Repositories
                 context.Duels.Add(duel);
             }
 
-
-            
             context.SaveChanges();
         }
         public void AddWhiteCard(Card whiteCard)
         {
             if (whiteCard.IsPrompt == false)
             {
-                context.Cards.Add(whiteCard);
+                context.Cards.Add(whiteCard);//if not black card then add
                 context.SaveChanges();
             }
         }
@@ -59,6 +59,17 @@ namespace TermProject.Repositories
             if (prompt.IsPrompt == true)
             {
                 context.Cards.Add(prompt);
+                context.SaveChanges();
+            }
+        }
+        public void UpdateDuelVotes(Duel duel)
+        {
+            if (duel.DuelID != 0)
+            {
+                int VotesP1 = duel.VotesP1;
+                int VotesP2 = duel.VotesP2;
+                duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
+                context.Tournaments.Update(Tournaments[0]);
                 context.SaveChanges();
             }
         }

@@ -13,7 +13,6 @@ namespace TermProject.Models
         public string Password { get; set; }
         public int CardID { get; set; }
         public int Score { get; set; }
-        public int Votes { get; set; }
         public bool Voted { get; set; }
         public bool IsDueling { get; set; }
     }
