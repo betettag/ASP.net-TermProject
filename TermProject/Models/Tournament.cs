@@ -13,7 +13,6 @@ namespace TermProject.Models
         //public Player TopWeeklyPlayer {get; set;}
         public int PlayerCount { get; set; }
         public int VoteCount { get; set; }
-
         public DateTime ExpiryTime { get; set; }
 
 

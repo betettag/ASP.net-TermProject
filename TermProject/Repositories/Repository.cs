@@ -80,21 +80,26 @@ namespace TermProject.Repositories
                 context.SaveChanges();
             }
         }
-        public void UpdateDuelVotes(Duel duel)
+        public Player UpdateDuelVotes(Duel duel)
         {
+            Player player = Players.Find(p => p.PlayerID == duel.VoterID);
             ResetTournament();//reset if needed
-            if (duel.DuelID != 0)
-            {
-                int VotesP1 = duel.VotesP1;
-                int VotesP2 = duel.VotesP2;
-                duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
-                context.Tournaments.Update(Tournaments[0]);
-                context.SaveChanges();
-            }
+            player.Voted = true;
+            context.Players.Update(player);//getting player from player id and updating it
+
+            int VotesP1 = duel.VotesP1;
+            int VotesP2 = duel.VotesP2;
+            duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
+            duel.VotesP1 = VotesP1;
+            duel.VotesP2 = VotesP2;
+            context.Duels.Update(duel);//updating duel votes
+
+            context.SaveChanges();
+            return player;
         }
         public void ResetTournament()
         {
-            if (Tournaments[0].ExpiryTime > DateTime.Now)
+            if (Tournaments[0].ExpiryTime < DateTime.Now)
             {
                 //List<Player> players = context.Players.ToList();
                 foreach (var tournament in context.Tournaments)//remove if expired tournament
@@ -130,7 +135,7 @@ namespace TermProject.Repositories
                 context.Tournaments.Add(FirstTournament);
                 context.SaveChanges();
             }
-            //do nothing :<
+            //do nothing :< because not expired
         }
     }
 }

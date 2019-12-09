@@ -56,7 +56,7 @@ namespace TermProject.Repositories
 
                 context.Cards.Add(whitecard);
                 context.Cards.Add(blackcard);
-                context.Cards.Add(blackcard);
+                context.Cards.Add(whitecard2);
                 context.Players.Add(guestPlayer);
                 context.Duels.Add(guestDuel);
                 context.Tournaments.Add(FirstTournament);

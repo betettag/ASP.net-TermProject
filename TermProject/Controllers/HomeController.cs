@@ -28,7 +28,7 @@ namespace TermProject.Controllers
             ViewBag.playerCount = Repository.Players.Count()-1;
             ViewBag.playerNew = Repository.Players.Last().Username;//random stats
             ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count()-1;//guest doesnt count
-            return View(player);
+            return View("Index",player);
         }
         public IActionResult Login(Player p)
         {
@@ -52,14 +52,17 @@ namespace TermProject.Controllers
             if(p == null){
                 p = Repository.Players[0];
                 ModelState.AddModelError("Validation", "Wrong username or pass");
-                RedirectToAction("Login");//Invalid therefore redirect to login again
+                return View ("Login",p);//Invalid therefore redirect to login again
             }
-            return View("Index", p);//returns home for a valid user
+            ViewBag.playerCount = Repository.Players.Count() - 1;
+            ViewBag.playerNew = Repository.Players.Last().Username;//random stats
+            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
+            return View ("Index",p);//returns home for a valid user
         }
         public IActionResult Voting(Player p)//later tm
         {
             Repository.ResetTournament();
-            p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
+            p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);//just in case a someone tries something sneaky 
 
             if (p == null || p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
             {
@@ -77,12 +80,9 @@ namespace TermProject.Controllers
             return View(viewModel);
         }
         [HttpGet]
-        public IActionResult Voted(Duel d)//post for after voting
+        public IActionResult Voted(VotingViewModel v)//post for after voting
         {
-
-            Player player = Repository.Players.Find(p => p.PlayerID == d.VoterID);//getting player from player id
-            player.Voted = true; //player has voted
-            Repository.UpdateDuelVotes(d);
+            Player player = Repository.UpdateDuelVotes(v.duel);
             return View("Index",player);
         }
         public IActionResult AddCard(Player p)
@@ -155,7 +155,7 @@ namespace TermProject.Controllers
 
         public IActionResult NewDuel(Player p)
         {
-            Repository.ResetTournament();
+            Repository.ResetTournament();//reset if expired
             p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
 
             if (p == null || p.PlayerID == 0 || p.Username == null)
@@ -169,7 +169,6 @@ namespace TermProject.Controllers
                 player = p
             };
             
-            Repository.ResetTournament();
             if (p.IsDueling == false)//not going to let a user duel twice
                 return View(viewModel);
             return View("Index", p);

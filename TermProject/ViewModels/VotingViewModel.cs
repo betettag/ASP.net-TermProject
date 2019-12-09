@@ -10,5 +10,6 @@ namespace TermProject.ViewModels
     {
         public Player player { get; set; }
         public List<Duel> Duels { get; set; }
+        public Duel duel { get; set; }
     }
 }

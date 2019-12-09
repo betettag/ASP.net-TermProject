@@ -38,7 +38,7 @@
                     @ViewBag.playerNew<br />
                     Duels: @ViewBag.duelsCount
                 </p>
-                <a asp-controller="Home" asp-action="HighScores" class="btn btn-black">See the High Scores!</a>
+                <a class="btn btn-black" href="@Url.Action("HighScores","Home", ViewData["Player"]);">See the High Scores!</a>
                 <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
             </div>
         </div>
