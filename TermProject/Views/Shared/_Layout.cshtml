@@ -19,7 +19,7 @@
     <header>
         <!--Navbar -->
         <nav class="mb-1 navbar navbar-expand-lg navbar-dark black lighten-1">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">IAH Home</a>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home", ViewData["Player"]);">IAH Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
                     aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

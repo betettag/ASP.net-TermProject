@@ -37,7 +37,7 @@ namespace TermProject.Repositories
                 {
                     Username = "Gino :<",
                     Score = 1,
-                    IsDueling = true,
+                    IsDueling = false,
                     Voted = false,
                     DuelCard = whitecard,
                     Password = "pass"

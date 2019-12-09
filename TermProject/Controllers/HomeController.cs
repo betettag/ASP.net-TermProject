@@ -171,7 +171,7 @@ namespace TermProject.Controllers
             
             if (p.IsDueling == false)//not going to let a user duel twice
                 return View(viewModel);
-            return View("Index", p);
+            return Index(p);
         }
         [HttpPost]
         public IActionResult NewDuelPost(Player player) 
