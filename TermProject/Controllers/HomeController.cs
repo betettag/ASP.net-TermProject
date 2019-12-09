@@ -45,7 +45,7 @@ namespace TermProject.Controllers
         //        p = Repository.Players[0];
         //        return View("Index", p);//logout is user=guest not sure if im going to implement this
         //}
-        [HttpPost]
+        [HttpGet]
         public IActionResult LoginValidation(Player p)
         {//getting right user except guest
             p = Repository.Players.Find(player => player.Username == p.Username && player.Password == p.Password && player.PlayerID != 1);
@@ -73,17 +73,25 @@ namespace TermProject.Controllers
             {
                 return View("PlayerError", p);
             }
-            var viewModel = new VotingViewModel();
-            viewModel.player = p;//passing player and list of duels
-            viewModel.Duels = Repository.Tournaments[0].Duels;
-
-            return View(viewModel);
+            if(p.Voted != true)
+            {
+                var viewModel = new VotingViewModel();
+                viewModel.player = p;//passing player and list of duels
+                viewModel.Duels = Repository.Tournaments[0].Duels;
+                viewModel.duel = new Duel();
+                viewModel.duel.Players = new List<Player>();
+                viewModel.duel.Players.Add(new Player());
+                viewModel.duel.Players.Add(new Player());
+                return View(viewModel);
+            }
+            return Index(p);
         }
         [HttpGet]
         public IActionResult Voted(VotingViewModel v)//post for after voting
         {
-            Player player = Repository.UpdateDuelVotes(v.duel);
-            return View("Index",player);
+            Player player = Repository.UpdateDuelVotesAndScore(v.duel);
+
+            return Index(player);
         }
         public IActionResult AddCard(Player p)
         {
@@ -103,7 +111,7 @@ namespace TermProject.Controllers
             p.DuelCard = card;//setting card to be passed
             return View(p);
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult AddCardValidation(Player player)
         {
             //Player player = Repository.Players.Find(p => p.PlayerID == p.DuelCard.CreatorID);//getting player from player id
@@ -173,11 +181,14 @@ namespace TermProject.Controllers
                 return View(viewModel);
             return Index(p);
         }
-        [HttpPost]
-        public IActionResult NewDuelPost(Player player) 
+        [HttpGet]
+        public IActionResult NewDuelValidation(AllCardsViewModels v) 
         {
-            if (Repository.Players.Where(p => p.Username == player.Username) != null)
-            {
+            Player player;
+            if (Repository.Players.Where(p => p.Username == v.player.Username && p.Password == v.player.Password) == null 
+                || v.player.Username == null || v.player.Password == null || v.player.Username == " " || v.player.Password ==" ") 
+            {//basic validation
+                player = Repository.Players.Find(p => p.PlayerID == v.player.PlayerID);
                 var viewModel = new AllCardsViewModels()
                 {
                     Cards = Repository.Cards, //passing the player and cards
@@ -185,8 +196,13 @@ namespace TermProject.Controllers
                 };
                 return View(viewModel);//return view again if player has been found to avoid duplicates
             }
-            Repository.ResetTournament();//reset tournament if a week has passed. keeps players
-            player = Repository.AddPlayerToDuel(player);//reusing variable and adding player to duel
+            Repository.Tournaments[0].Duels.First();//testing
+            //Repository.ResetTournament();//reset tournament if a week has passed. keeps players
+            player = Repository.AddPlayerToDuel(v.player);//reusing variable and adding player to duel
+            Repository.Tournaments[0].Duels.First();//testing
+            ViewBag.playerCount = Repository.Players.Count() - 1;
+            ViewBag.playerNew = Repository.Players.Last().Username;//random stats
+            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
             return View("Index", player);
         }
 

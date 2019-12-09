@@ -4604,7 +4604,6 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 
 .card-deck {
     display: -ms-flexbox;
-    display: flex;
     -ms-flex-direction: column;
     flex-direction: column
 }

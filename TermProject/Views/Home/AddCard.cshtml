@@ -11,7 +11,7 @@
     <div class="jumbotron text-center white-text" style="background-color: black">
         <h2 class="text-white">Add a card or else... :<</h2>
             @Html.ValidationMessage("Validation")
-            <form asp-action="AddCardValidation" method="post">
+            <form asp-action="AddCardValidation" method="get">
                 <div class="form-group">
                     <input asp-for="DuelCard.CreatorID" hidden value="@Model.PlayerID">
                     <label>Card Text</label>

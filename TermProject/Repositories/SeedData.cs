@@ -16,10 +16,12 @@ namespace TermProject.Repositories
                 Card whitecard = new Card();
                 whitecard.Text = "Undoubtedly White Card";
                 whitecard.IsPrompt = false;
+                whitecard.CreatorID = 1;
 
                 Card whitecard2 = new Card();
                 whitecard2.Text = "Undeniably White Card";
                 whitecard2.IsPrompt = false;
+                whitecard2.CreatorID = 1;
 
                 Card blackcard = new Card();
                 blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
@@ -30,14 +32,14 @@ namespace TermProject.Repositories
                     Username = "Guest",
                     Score = 0,
                     IsDueling = false,
-                    Voted = false,
+                    Voted = true,
                     DuelCard = whitecard2
                 };
                 Player seedPlayer = new Player()
                 {
                     Username = "Gino :<",
                     Score = 1,
-                    IsDueling = false,
+                    IsDueling = true,
                     Voted = false,
                     DuelCard = whitecard,
                     Password = "pass"
@@ -58,6 +60,7 @@ namespace TermProject.Repositories
                 context.Cards.Add(blackcard);
                 context.Cards.Add(whitecard2);
                 context.Players.Add(guestPlayer);
+                context.Players.Add(seedPlayer);
                 context.Duels.Add(guestDuel);
                 context.Tournaments.Add(FirstTournament);
                 

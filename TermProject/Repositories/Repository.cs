@@ -35,30 +35,35 @@ namespace TermProject.Repositories
         public Player AddPlayerToDuel(Player player)
         {
             ResetTournament();//reset if needed
-            Player newPlayer = player;//lets see if its not by reference
+            Player newPlayer = player;//store previous values if player is new
             player = Players.Find(p => (p.Username == player.Username) && (p.Password == player.Password));//find user
             if (player == null)
             {
-                player = new Player();
-                player.Username = newPlayer.Username;//copy prev parameters passed
-                player.Password = newPlayer.Password;
+                player = newPlayer;
+                player.PlayerID = 0;
+                player.Score = 1;
             }
             player.PromtID = newPlayer.PromtID;
             player.IsDueling = true;
             player.DuelCard = Cards.Find(c => c.CardID == newPlayer.CardID);
 
-            Duel duel = context.Duels.Find(Players.Count() != 2);//getting duel that needs a player or null
+            Duel duel = context.Duels.Where(d =>d.Players.Count() != 2).FirstOrDefault();//getting duel that needs a player or null
             if (duel != null)//if duel not empty add player to list
             {
                 duel.Players.Add(player);
+                context.Players.Add(player);
                 context.Duels.Update(duel);//addplayer and update
+                context.Tournaments.Update(context.Tournaments.First());
             }
             else
             {
                 Duel newDuel = new Duel();
                 newDuel.Prompt = Cards.Find(c => c.CardID == player.PromtID);
-                newDuel.Players.Add(player);//new duel add new player
-                context.Duels.Add(newDuel);
+                newDuel.Players = new List<Player>();
+                newPlayer = player;
+                newDuel.Players.Add(newPlayer);//new duel add new player
+                //context.Players.Update(player); not needed
+                context.Tournaments.First().Duels.Add(newDuel);
             }
 
             context.SaveChanges();
@@ -80,18 +85,43 @@ namespace TermProject.Repositories
                 context.SaveChanges();
             }
         }
-        public Player UpdateDuelVotes(Duel duel)
-        {
+        public Player UpdateDuelVotesAndScore(Duel duel)
+        {            
+            bool flag;
+            int Votes;
+            int PlayerID;
+            if (duel.VotesP1 == 0) {//modifying only one field and capturing variables
+                Votes = duel.VotesP2;
+                flag = false;
+                PlayerID = duel.Players[1].PlayerID;
+            }
+            else
+            {
+                Votes = duel.VotesP1;
+                flag = true;
+                PlayerID = duel.Players[0].PlayerID;
+            }
             Player player = Players.Find(p => p.PlayerID == duel.VoterID);
+            Player player2 = Players.Find(p => p.PlayerID == Tournaments[0].Duels.Find(d =>d.DuelID == duel.DuelID).Players.Find(p2 => p2.PlayerID == PlayerID).PlayerID);
+            if (player.Equals(player2))
+                return player; //cant vote for yourself try again
+            ++player2.Score;
             ResetTournament();//reset if needed
             player.Voted = true;
             context.Players.Update(player);//getting player from player id and updating it
+            context.Players.Update(player2);//adding points
 
-            int VotesP1 = duel.VotesP1;
-            int VotesP2 = duel.VotesP2;
             duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
-            duel.VotesP1 = VotesP1;
-            duel.VotesP2 = VotesP2;
+            if (flag)
+            {
+                duel.VotesP2 = Votes;
+            }
+            else
+            {
+                duel.VotesP1 = Votes;
+            }
+            
+            
             context.Duels.Update(duel);//updating duel votes
 
             context.SaveChanges();

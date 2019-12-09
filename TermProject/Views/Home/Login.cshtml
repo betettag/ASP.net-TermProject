@@ -26,7 +26,7 @@
         @Html.ValidationMessage("Validation")
         <div class="col-md-6 col-sm-12">
             <div class="login-form" >
-                <form asp-action="LoginValidation" method="post">
+                <form asp-action="LoginValidation" method="get">
                     <div class="form-group">
                         <label>User Name</label>
                         <input asp-for="Username" type="text" class="form-control" placeholder="User Name">
