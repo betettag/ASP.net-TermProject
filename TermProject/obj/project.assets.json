@@ -12942,11 +12942,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProject\\TermProject.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProject\\TermProject.csproj",
       "projectName": "TermProject",
-      "projectPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProject\\TermProject.csproj",
+      "projectPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProject\\TermProject.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProject\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProject\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

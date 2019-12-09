@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAXprS68K0bEajLu/utzGOpAAAAAACAAAAAAAQZgAAAAEAACAAAAAWT/soPIs9PMwHwv6PzFuDzLwE3GUPbQvxp/vrtdG5gQAAAAAOgAAAAAIAACAAAAA/6gOP9gN3eG6u6qikqf1j0dzBTf0P3gcFodUmwtAyMSAAAAC8p0qWfIShvZr0GNobenK36UuqqfsGfuvtEZ7wochfJkAAAAAVlpH6KlN2/d8nORLjsBKvm5/potZVMPaHNsaqYFMY7kDky3G9IJ2LH7z5HkvLAisYMXyGqbj0mlvxdlyuwm/m</EncryptedPassword>
+    <_PublishTargetUrl>ftp://ftp.site4now.net/./project/</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="SanMsSqlConnection">
+      <Value>Data Source=SQL5041.site4now.net%3bInitial Catalog=DB_A50BD3_alado221%3bUser Id=DB_A50BD3_alado221_admin%3bPassword=password123%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

@@ -26,6 +26,49 @@ namespace TermProject.Repositories
                 Card blackcard = new Card();
                 blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
                 blackcard.IsPrompt = true;
+                blackcard.CreatorID = 1;
+
+                Card blackcard2 = new Card();
+                blackcard2.Text = "Im going to cleanse this week, nothing but kale and ...";
+                blackcard2.IsPrompt = true;
+                context.Cards.Add(blackcard2);
+
+                Card blackcard3 = new Card();
+                blackcard3.Text = "Believe it or not, Jim Carrey can do a dead-on impression of ...";
+                blackcard3.IsPrompt = true;
+                context.Cards.Add(blackcard3);
+                Card blackcard4 = new Card();
+                blackcard4.Text = "It’s Morphin’ Time! Mastodon! Pterodactyl! Triceratops! Sabertooth Tiger!...!";
+                blackcard4.IsPrompt = true;
+                context.Cards.Add(blackcard4);
+                Card blackcard5 = new Card();
+                blackcard5.Text = "I’m not going to lie. I despise ... There, I said it.";
+                blackcard5.IsPrompt = true;
+                context.Cards.Add(blackcard5);
+                Card blackcard6 = new Card();
+                blackcard6.Text = "Sir, we found you passed out naked on the side of the road. What’s the last thing you remember?";
+                blackcard6.IsPrompt = true;
+                context.Cards.Add(blackcard6);
+                Card blackcard7 = new Card();
+                blackcard7.Text = "My name is Inigo Montoya. You killed my father. Prepare for ....";
+                blackcard7.IsPrompt = true;
+                context.Cards.Add(blackcard7);
+                Card blackcard8 = new Card();
+                blackcard8.Text = "A study published in Nature this week found that ... is good for you in small doses.";
+                blackcard8.IsPrompt = true;
+                context.Cards.Add(blackcard8);
+                Card blackcard9 = new Card();
+                blackcard9.Text = "What really killed the dinosaurs?";
+                blackcard9.IsPrompt = true;
+                context.Cards.Add(blackcard9);
+
+                List<string> blackcards = new List<string>();
+                blackcards.Add("Hey, you guys want to try this awesome new game? It’s called ...");
+                blackcards.Add("It’s not delivery. It’s ...");
+                foreach (string card in blackcards)
+                {
+                    context.Cards.Add(new Card() { Text = card, IsPrompt = true });
+                }
 
                 Player guestPlayer = new Player()
                 {

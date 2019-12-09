@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProjectTests\\TermProjectTests.csproj": {}
+    "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProjectTests\\TermProjectTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProjectTests\\TermProjectTests.csproj": {
+    "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProjectTests\\TermProjectTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProjectTests\\TermProjectTests.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProjectTests\\TermProjectTests.csproj",
         "projectName": "TermProjectTests",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProjectTests\\TermProjectTests.csproj",
+        "projectPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProjectTests\\TermProjectTests.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\TermProject\\TermProjectTests\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\Desktop\\cs295n\\ASP.net-TermProject\\stuff\\stuff\\TermProjectTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

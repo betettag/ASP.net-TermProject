@@ -38,7 +38,7 @@ namespace TermProject
 
             services.AddTransient<IRepository, Repository>();
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
-                Configuration["ConnectionStrings:LocalDbConnection"]));
+                Configuration["ConnectionStrings:SanMsSqlConnection"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
