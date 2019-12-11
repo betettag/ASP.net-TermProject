@@ -7,6 +7,11 @@ namespace TermProject.Models
 {
     public class Tournament
     {
+        public Tournament()
+        {
+            ExpiryTime = DateTime.Now.AddDays(7);
+            Duels = new List<Duel>();
+        }
         public int TournamentID { get; set; }
         public List<Duel> Duels { get; set; }
         //public Player TopAllTimePlayer { get; set; }

@@ -26,11 +26,6 @@ namespace TermProject.Repositories
                 .ThenInclude(d =>d.Players)
                     .ThenInclude(c => c.DuelCard)
             .ToList());//getting all the data here
-        public void AddPlayer(Duel duel,Player player)
-        {
-            context.Players.Add(player);
-            context.SaveChanges();
-        }
 
         public Player AddPlayerToDuel(Player player)
         {

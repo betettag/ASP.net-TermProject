@@ -116,37 +116,38 @@ namespace TermProject.Controllers
         {
             //Player player = Repository.Players.Find(p => p.PlayerID == p.DuelCard.CreatorID);//getting player from player id
 
-            if (player.DuelCard.Text != "" || player.DuelCard.Text != null || player.DuelCard.CreatorID != 0 
+            if (player.DuelCard.Text == "" || player.DuelCard.Text == null || player.DuelCard.CreatorID <= 1 
                 && Repository.WhiteCards.Where(c => c.Text == player.DuelCard.Text) != null)//do not write duplicate or bad card
             {
-                const string CensoredText = "[Censored]";
-                const string PatternTemplate = @"\b({0})(s?)\b";//censoring words
-                const RegexOptions Options = RegexOptions.IgnoreCase;//pattern from the insternet
-
-                string[] badWords = new[] { "fuck", "bitch", "ass", "fucker","fucking", "flipping", "flippin", "damm" };
-
-                IEnumerable<Regex> badWordMatchers = badWords.
-                    Select(x => new Regex(string.Format(PatternTemplate, x), Options));
-
-                string input = player.DuelCard.Text;
-
-                string output = badWordMatchers.//matching
-                Aggregate(input, (current, matcher) => matcher.Replace(current, CensoredText));
-
-                player.DuelCard.Text = output;//replacing text
-                player.DuelCard.IsPrompt = false;
-                Repository.AddWhiteCard(player.DuelCard);//adding white card
-                player = Repository.Players.Find(p => p.PlayerID == player.DuelCard.CreatorID);
-                ModelState.AddModelError("Validation", "Card Added ");
-                var viewModel = new AllCardsViewModels()
-                {
-                    Cards = Repository.Cards, //passing the player and cards
-                    player = player
-                };
-                return View("AllCards", viewModel);
+                ModelState.AddModelError("Validation", "Card Error ");
+                return View("AddCard", player);
             }
-            ModelState.AddModelError("Validation", "Card Error ");
-            return View("AddCard", player);
+
+            const string CensoredText = "[Censored]";
+            const string PatternTemplate = @"\b({0})(s?)\b";//censoring words
+            const RegexOptions Options = RegexOptions.IgnoreCase;//pattern from the internet
+
+            string[] badWords = new[] { "fuck", "bitch", "ass", "fucker", "fucking", "flipping", "flippin", "damm" };
+
+            IEnumerable<Regex> badWordMatchers = badWords.
+                Select(x => new Regex(string.Format(PatternTemplate, x), Options));
+
+            string input = player.DuelCard.Text;
+
+            string output = badWordMatchers.//matching
+            Aggregate(input, (current, matcher) => matcher.Replace(current, CensoredText));
+
+            player.DuelCard.Text = output;//replacing text
+            player.DuelCard.IsPrompt = false;
+            Repository.Cards.Add(player.DuelCard);//adding white card
+            player = Repository.Players.Find(p => p.PlayerID == player.DuelCard.CreatorID);
+            ModelState.AddModelError("Validation", "Card Added ");
+            var viewModel = new AllCardsViewModels()
+            {
+                Cards = Repository.Cards, //passing the player and cards
+                player = player
+            };
+            return View("AllCards", viewModel);
         }
         public IActionResult AllCards(Player p)
         {
@@ -185,7 +186,7 @@ namespace TermProject.Controllers
         public IActionResult NewDuelValidation(AllCardsViewModels v) 
         {
             Player player;
-            if (Repository.Players.Where(p => p.Username == v.player.Username && p.Password == v.player.Password) == null 
+            if (Repository.Players.Find(p => p.Username == v.player.Username && p.Password != v.player.Password) != null 
                 || v.player.Username == null || v.player.Password == null || v.player.Username == " " || v.player.Password ==" ") 
             {//basic validation
                 player = Repository.Players.Find(p => p.PlayerID == v.player.PlayerID);
@@ -199,7 +200,7 @@ namespace TermProject.Controllers
             Repository.Tournaments[0].Duels.First();//testing
             //Repository.ResetTournament();//reset tournament if a week has passed. keeps players
             player = Repository.AddPlayerToDuel(v.player);//reusing variable and adding player to duel
-            Repository.Tournaments[0].Duels.First();//testing
+            //Repository.Tournaments[0].Duels.First();//testing
             ViewBag.playerCount = Repository.Players.Count() - 1;
             ViewBag.playerNew = Repository.Players.Last().Username;//random stats
             ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count

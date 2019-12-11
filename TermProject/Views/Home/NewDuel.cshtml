@@ -6,8 +6,8 @@
     ViewData["Score"] = Model.player.Score;
     ViewData["BootStrap"] = true;
     Random rnd = new Random();
-    var cards = Model.Cards.Where(c => c.IsPrompt == false).OrderBy(c => Guid.NewGuid()).Take(5);
-    var prompt = Model.Cards.Where(c => c.IsPrompt == true).OrderBy(c => Guid.NewGuid()).First();
+    var cards = Model.Cards.Where(c => c.IsPrompt == false && c.CardID != 12).OrderBy(c => Guid.NewGuid()).Take(5);
+    var prompt = Model.Cards.Where(c => c.IsPrompt == true && c.CardID != 11 && c.CardID != 13).OrderBy(c => Guid.NewGuid()).First();
 }
 
 
