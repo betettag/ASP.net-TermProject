@@ -1,12 +1,22 @@
-﻿
-@model Player;
-@{
+﻿@using Microsoft.AspNetCore.Identity
+@using TermProject.Models
+@inject SignInManager<Player> SignInManager
+@inject UserManager<Player> UserManager
+@{ 
+    var user = await UserManager.GetUserAsync(User);
     ViewData["Title"] = "Home Page";
-    ViewData["Player"]= Model;
-    ViewData["Username"]= Model.Username;
-    ViewData["Score"] = Model.Score;
+    ViewData["Player"] = user;
+    if (SignInManager.IsSignedIn(User)){
+        ViewData["Username"] = user.UserName;
+        ViewData["Score"] = user.Score;
+    }
+    else
+    {
+        ViewData["Username"] = "Guest";
+        ViewData["Score"] = 0;
+    }
     ViewData["BootStrap"] = true;
-}
+    }
 <html>
 <head>
 
@@ -30,12 +40,7 @@
                 <h5 class="card-title">Stats</h5>
                 <p class="card-text">
                     Player Count: @ViewBag.playerCount<br />
-                    Newest Player:
-                    @if (ViewBag.playerNew == "Guest")
-                    {
-                        ViewBag.playerNew = "Nobody :<";
-                    }
-                    @ViewBag.playerNew<br />
+                    Newest Player:@ViewBag.playerNew<br />
                     Duels: @ViewBag.duelsCount
                 </p>
                 <a class="btn btn-black" href="@Url.Action("HighScores","Home", ViewData["Player"]);">See the High Scores!</a>
@@ -43,21 +48,20 @@
             </div>
         </div>
         @*<div class="card text-center" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
             </div>
-        </div>
-        <div class="card text-center" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>*@
-        </div>
+            <div class="card text-center" style="width: 18rem;">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>*@
     </div>
 </body>
 </html>

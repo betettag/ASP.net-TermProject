@@ -19,57 +19,53 @@ namespace TermProject.Controllers
         {
             Repository = r;
         }
-        public IActionResult Index(Player player)
+        public IActionResult Index()
         {
-            if (player.PlayerID == 0 || player.Username == null)
-            {
-                player = Repository.Players[0];//first time loading gets guest
-            }
-            ViewBag.playerCount = Repository.Players.Count()-1;
-            ViewBag.playerNew = Repository.Players.Last().Username;//random stats
-            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count()-1;//guest doesnt count
-            return View("Index",player);
+            ViewBag.playerCount = Repository.Players.Count();
+            ViewBag.playerNew = Repository.Players.Last().UserName;//random stats
+            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count();//guest doesnt count
+            return View("Index");
         }
-        public IActionResult Login(Player p)
-        {
-            if (p.PlayerID == 0 || p.Username == null)
-            {
-                p = Repository.Players[0];
-            }
-            if (p.Username != "Guest" && p.PlayerID != 1 && p.Score != 0)
-                return View("Index", p);//not going to let a user login again
-            return View(p);
-        }
+        //public IActionResult Login()
+        //{
+        //    if (p.PlayerID == 0 || p.Username == null)
+        //    {
+        //        p = Repository.Players[0];
+        //    }
+        //    if (p.Username != "Guest" && p.PlayerID != 1 && p.Score != 0)
+        //        return View("Index", p);//not going to let a user login again
+        //    return View(p);
+        //}
         //public IActionResult Logout(Player p)
         //{
         //        p = Repository.Players[0];
         //        return View("Index", p);//logout is user=guest not sure if im going to implement this
         //}
-        [HttpGet]
-        public IActionResult LoginValidation(Player p)
-        {//getting right user except guest
-            p = Repository.Players.Find(player => player.Username == p.Username && player.Password == p.Password && player.PlayerID != 1);
-            if(p == null){
-                p = Repository.Players[0];
-                ModelState.AddModelError("Validation", "Wrong username or pass");
-                return View ("Login",p);//Invalid therefore redirect to login again
-            }
-            ViewBag.playerCount = Repository.Players.Count() - 1;
-            ViewBag.playerNew = Repository.Players.Last().Username;//random stats
-            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
-            return View ("Index",p);//returns home for a valid user
-        }
+        //[HttpGet]
+        //public IActionResult LoginValidation(Player p)
+        //{//getting right user except guest
+        //    p = Repository.Players.Find(player => player.Username == p.Username && player.Password == p.Password && player.PlayerID != 1);
+        //    if(p == null){
+        //        p = Repository.Players[0];
+        //        ModelState.AddModelError("Validation", "Wrong username or pass");
+        //        return View ("Login",p);//Invalid therefore redirect to login again
+        //    }
+        //    ViewBag.playerCount = Repository.Players.Count() - 1;
+        //    ViewBag.playerNew = Repository.Players.Last().Username;//random stats
+        //    ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
+        //    return View ("Index",p);//returns home for a valid user
+        //}
         public IActionResult Voting(Player p)//later tm
         {
             Repository.ResetTournament();
             p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);//just in case a someone tries something sneaky 
 
-            if (p == null || p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
+            if (p == null || p.PlayerID == 0 || p.UserName == null)//if its not passed a player it sets to guest
             {
                 p = Repository.Players[0];
                 return View("PlayerError", p);//error view to login or create duel
             }
-            else if (p.PlayerID == 1 || p.Username == "Guest" || p.Score == 0)//if guest then still error
+            else if (p.PlayerID == 1 || p.UserName == "Guest" || p.Score == 0)//if guest then still error
             {
                 return View("PlayerError", p);
             }
@@ -84,25 +80,17 @@ namespace TermProject.Controllers
                 viewModel.duel.Players.Add(new Player());
                 return View(viewModel);
             }
-            return Index(p);
+            return Index();
         }
         [HttpGet]
         public IActionResult Voted(VotingViewModel v)//post for after voting
         {
             Player player = Repository.UpdateDuelVotesAndScore(v.duel);
 
-            return Index(player);
+            return Index();
         }
         public IActionResult AddCard(Player p)
         {
-            if (p.PlayerID == 0 || p.Username == null)//if its not passed a player it sets to guest
-            {
-                p = Repository.Players[0];
-                return View("PlayerError",p);//error view to login or create duel
-            }else if (p.PlayerID == 1 || p.Username == "Guest" || p.Score == 0)//if guest then still error
-            {
-                return View("PlayerError", p);
-            }
             Card card = new Card()
             {
                 CreatorID = p.PlayerID,
@@ -151,10 +139,6 @@ namespace TermProject.Controllers
         }
         public IActionResult AllCards(Player p)
         {
-            if (p.PlayerID == 0 || p.Username == null)
-            {
-                p = Repository.Players[0];
-            }
             var viewModel = new AllCardsViewModels() {
                 Cards = Repository.Cards, //passing the player and cards
                 player = p
@@ -167,10 +151,6 @@ namespace TermProject.Controllers
             Repository.ResetTournament();//reset if expired
             p = Repository.Players.Find(player => player.PlayerID == p.PlayerID);
 
-            if (p == null || p.PlayerID == 0 || p.Username == null)
-            {
-                p = Repository.Players[0];
-            }
 
             var viewModel = new AllCardsViewModels()
             {
@@ -180,14 +160,13 @@ namespace TermProject.Controllers
             
             if (p.IsDueling == false)//not going to let a user duel twice
                 return View(viewModel);
-            return Index(p);
+            return Index();
         }
         [HttpGet]
         public IActionResult NewDuelValidation(AllCardsViewModels v) 
         {
             Player player;
-            if (Repository.Players.Find(p => p.Username == v.player.Username && p.Password != v.player.Password) != null 
-                || v.player.Username == null || v.player.Password == null || v.player.Username == " " || v.player.Password ==" ") 
+            if (ModelState.IsValid) 
             {//basic validation
                 player = Repository.Players.Find(p => p.PlayerID == v.player.PlayerID);
                 var viewModel = new AllCardsViewModels()
@@ -202,17 +181,13 @@ namespace TermProject.Controllers
             player = Repository.AddPlayerToDuel(v.player);//reusing variable and adding player to duel
             //Repository.Tournaments[0].Duels.First();//testing
             ViewBag.playerCount = Repository.Players.Count() - 1;
-            ViewBag.playerNew = Repository.Players.Last().Username;//random stats
+            ViewBag.playerNew = Repository.Players.Last().UserName;//random stats
             ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
             return View("Index", player);
         }
 
         public ActionResult HighScores(Player p)
         {
-            if (p.PlayerID == 0 || p.Username == null)
-            {
-                p = Repository.Players[0];
-            }
             var viewModel = new HighScoresViewModel();
             viewModel.player = p;
             viewModel.Players = Repository.Players;//passing player and list of players

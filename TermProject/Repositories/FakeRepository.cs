@@ -31,7 +31,7 @@ namespace TermProject.Repositories
         {
             ResetTournament();//reset if needed
             Player newPlayer = player;//store previous values if player is new
-            player = Players.Find(p => (p.Username == player.Username) && (p.Password == player.Password));//find user
+            player = Players.Find(p => (p.UserName == player.UserName) && (p.Password == player.Password));//find user
             if (player == null)
             {
                 player = newPlayer;

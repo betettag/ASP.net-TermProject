@@ -5,20 +5,23 @@ using System.Threading.Tasks;
 using TermProject.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 
 namespace TermProject.Repositories
 {
     public class Repository : IRepository
     {
         private AppDbContext context;
-        public Repository(AppDbContext appDbContext)
+        private UserManager<Player> userManager;
+        public Repository(AppDbContext appDbContext, UserManager<Player> usrMgr)
         {
             context = appDbContext;
+            userManager = usrMgr;
         }
         public List<Card> WhiteCards => context.Cards.Where(c => c.IsPrompt == false).ToList();
         public List<Card> Cards => context.Cards.ToList();
         public List<Card> Prompts => context.Cards.Where(c => c.IsPrompt == true).ToList();
-        public List<Player> Players => context.Players.ToList();
+        public List<Player> Players => userManager.Users.ToList();
         public List <Tournament> Tournaments => (context.Tournaments
             .Include(t=>t.Duels)
                 .ThenInclude(d =>d.Prompt)//the duel bone is connected to the prompt bone
@@ -31,7 +34,7 @@ namespace TermProject.Repositories
         {
             ResetTournament();//reset if needed
             Player newPlayer = player;//store previous values if player is new
-            player = Players.Find(p => (p.Username == player.Username) && (p.Password == player.Password));//find user
+            player = Players.Find(p => (p.UserName == player.UserName) && (p.Password == player.Password));//find user
             if (player == null)
             {
                 player = newPlayer;

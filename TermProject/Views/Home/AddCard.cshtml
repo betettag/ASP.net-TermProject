@@ -1,23 +1,28 @@
-﻿@model Player;
+﻿@using Microsoft.AspNetCore.Identity
+@using TermProject.Models
+@inject SignInManager<Player> SignInManager
+@inject UserManager<Player> UserManager
+@model Card;
 @{
+    var user = await UserManager.GetUserAsync(User);
     ViewData["Title"] = "Add a Card";
-    ViewData["Player"] = Model;
-    ViewData["Username"] = Model.Username;
-    ViewData["Score"] = Model.Score;
+    ViewData["Username"] = user.UserName;
+    ViewData["Player"] = user;
+    ViewData["Score"] = user.Score;
     ViewData["BootStrap"] = true;
     //Model.DuelCard = new Card();
-} 
+}
 <body>
     <div class="jumbotron text-center white-text" style="background-color: black">
         <h2 class="text-white">Add a card or else... :<</h2>
-            @Html.ValidationMessage("Validation")
-            <form asp-action="AddCardValidation" method="get">
-                <div class="form-group">
-                    <input asp-for="DuelCard.CreatorID" hidden value="@Model.PlayerID">
-                    <label>Card Text</label>
-                    <input asp-for="DuelCard.Text" type="text" class="form-control" placeholder="Please family friendly XD">
-                </div>
-                <button type="submit" class="btn btn-black">Submit</button>
-            </form>
+        @Html.ValidationMessage("Validation")
+        <form asp-action="AddCardValidation" method="get">
+            <div class="form-group">
+                <input asp-for="CreatorID" hidden value="@user.PlayerID">
+                <label>Card Text</label>
+                <input asp-for="Text" type="text" class="form-control" placeholder="Please family friendly XD">
+            </div>
+            <button type="submit" class="btn btn-black">Submit</button>
+        </form>
     </div>
 </body>

@@ -27,18 +27,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="@Url.Action("HighScores","Home", ViewData["Player"]);">
+                        <a class="nav-link" href="@Url.Action("HighScores","Home", ViewData["Player"])">
                             HightScores
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("NewDuel","Home", ViewData["Player"]);">
+                        <a class="nav-link" href="@Url.Action("NewDuel","Home", ViewData["Player"])">
                             New Duel
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Voting","Home", ViewData["Player"]);">
+                        <a class="nav-link" href="@Url.Action("Voting","Home", ViewData["Player"])">
                             Voting
                         </a>
                     </li>
@@ -56,29 +56,27 @@
                 </ul>
                 <ul class="navbar-nav ml-auto nav-flex-icons">
                     <li class="nav-item">
-
+                        @*<partial name="_LoginPartial" />*@
                         @if ((string)ViewData["Username"] == "Guest" || ViewData["Score"].ToString() == "0")
                         {
-                            <a class="nav-link waves-effect waves-light" href="@Url.Action("Login","Home", ViewData["Player"]);">
-                                @("Hello! ")
+                            <a class="nav-link waves-effect waves-light" id="login" asp-area="Identity" asp-page="/Account/Login">
                                 @ViewData["Username"]
-                                @(" - Please Login :<")
-                                <i class="fas fa-check-circle"></i>
+                                @("Login/Register Here")
                             </a>
                         }
                         else
                         {
                             <a class="nav-link waves-effect waves-light" href="https://www.chicagotribune.com/resizer/8yoALwU0WPtzgBVBbMloP7mgxfk=/1200x0/top/www.trbimg.com/img-5cf45ff2/turbine/ct-life-ok-sign-racist-05282019">
-                            @("Hello! ")
-                            @ViewData["Username"]
-                            @(" Score: ")
-                            @ViewData["Score"]
+                                @("Hello! ")
+                                @ViewData["Username"]
+                                @(" Score: ")
+                                @ViewData["Score"]
                                 <i class="fas fa-check-circle"></i>
                             </a>
                         }
-                        
 
-                        </li>
+
+                    </li>
                     <li class="nav-item avatar dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">

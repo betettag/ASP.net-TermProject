@@ -1,10 +1,14 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@using TermProject.Models
+@inject SignInManager<Player> SignInManager
+@inject UserManager<Player> UserManager
 @model TermProject.ViewModels.AllCardsViewModels
 @{
     ViewData["Title"] = "All Cards";
-    ViewData["Username"] = Model.player.Username;
-    ViewData["Player"]= Model.player;
-    ViewData["Score"] = Model.player.Score;
+    var user = await UserManager.GetUserAsync(User);
+    ViewData["Username"] = user.UserName;
+    ViewData["Player"] = user;
+    ViewData["Score"] = user.Score;
     ViewData["BootStrap"] = true;
 }
 
@@ -27,7 +31,7 @@
     <div class="container-fluid py-2">
         <h2 class="font-weight-light">All White Cards (scroll sideways?)</h2>
         <div class="d-flex flex-row flex-nowrap">
-            @for (int i = 0;  i<Model.Cards.Count(); i++)
+            @for (int i = 0; i < Model.Cards.Count(); i++)
             {
                 if (Model.Cards[i].IsPrompt == true)
                 {

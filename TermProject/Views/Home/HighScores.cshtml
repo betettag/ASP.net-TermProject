@@ -1,9 +1,14 @@
-﻿@model TermProject.ViewModels.HighScoresViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using TermProject.Models
+@inject SignInManager<Player> SignInManager
+@inject UserManager<Player> UserManager
+@model TermProject.ViewModels.HighScoresViewModel
 @{
+    var user = await UserManager.GetUserAsync(User);
     ViewData["Title"] = "High Scores";
-    ViewData["Username"] = Model.player.Username;
-    ViewData["Player"]= Model.player;
-    ViewData["Score"] = Model.player.Score;
+    ViewData["Username"] = user.UserName;
+    ViewData["Player"] = user;
+    ViewData["Score"] = user.Score;
     ViewData["BootStrap"] = true;
 }
 
@@ -30,11 +35,12 @@
                 foreach (Player p in Model.Players)
                 {
                     <li>
-                        <mark>@p.Username</mark>
+                        <mark>@p.UserName</mark>
                         <small>@p.Score</small>
                     </li>
                 }
-            }else
+            }
+            else
             {
                 <li>
                     <mark>No Users Yet</mark>
@@ -65,6 +71,8 @@
 	C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273
 	C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06
 	c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z" />
+
+
 
       </symbol>
     </svg>

@@ -1,9 +1,14 @@
-﻿@model TermProject.ViewModels.AllCardsViewModels
+﻿@using Microsoft.AspNetCore.Identity
+@using TermProject.Models
+@inject SignInManager<Player> SignInManager
+@inject UserManager<Player> UserManager
+@model TermProject.ViewModels.AllCardsViewModels
 @{
+    var user = await UserManager.GetUserAsync(User);
     ViewData["Title"] = "New Duel";
-    ViewData["Username"] = Model.player.Username;
-    ViewData["Player"] = Model.player;
-    ViewData["Score"] = Model.player.Score;
+    ViewData["Username"] = user.UserName;
+    ViewData["Player"] = user;
+    ViewData["Score"] = user.Score;
     ViewData["BootStrap"] = true;
     Random rnd = new Random();
     var cards = Model.Cards.Where(c => c.IsPrompt == false && c.CardID != 12).OrderBy(c => Guid.NewGuid()).Take(5);
@@ -57,14 +62,6 @@
         @Html.ValidationMessage("Validation")
         @using (Html.BeginForm("NewDuelValidation", "Home", FormMethod.Get))
         {
-            <label>
-                Username: 
-                <input asp-for="player.Username" value="" placeholder="input username here">
-            </label>
-            <label>
-                Password: 
-            <input asp-for="player.Password" value="" placeholder="input password here">
-            </label>
             <h5 class="text-center">@prompt.Text</h5>
             <div class="card-deck" style="justify-content:flex-end; justify-content:center;">
                 @foreach (Card c in cards)
