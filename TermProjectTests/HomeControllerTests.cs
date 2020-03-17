@@ -47,7 +47,7 @@ namespace TermProjectTests
 
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -58,7 +58,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,
@@ -79,55 +79,53 @@ namespace TermProjectTests
         public void Index()
         {
             Arrange();
-
-            Player player = new Player();//test
             var controller = new HomeController(repo);
-            var index = controller.Index(player) as ViewResult;
+            var index = controller.Index() as ViewResult;
 
             //assert
             Assert.Equal(1, index.ViewData["playerCount"]);
-            Assert.Equal(repo.Players[1].Username, index.ViewData["playerNew"].ToString());
+            Assert.Equal(repo.Players[1].UserName, index.ViewData["playerNew"].ToString());
             Assert.Equal(0, index.ViewData["duelsCount"]);
             Assert.Equal(repo.Players[0], index.Model);
         }
+        //this is now scaffolded
+        //[Fact]   
+        //public void Login()
+        //{
+        //    Arrange();
 
-        [Fact]
-        public void Login()
-        {
-            Arrange();
+        //    Player player = new Player();//test
+        //    var controller = new HomeController(repo);
+        //    var login = controller.Login(player) as ViewResult;
 
-            Player player = new Player();//test
-            var controller = new HomeController(repo);
-            var login = controller.Login(player) as ViewResult;
+        //    //assert
+        //    Assert.Equal(repo.Players[0], login.Model);
+        //}
 
-            //assert
-            Assert.Equal(repo.Players[0], login.Model);
-        }
+        //[Fact]
+        //public void LoginValidation()
+        //{
+        //    Arrange();
+        //    Player player = new Player();
+        //    Player validPlayer = repo.Players[1];
 
-        [Fact]
-        public void LoginValidation()
-        {
-            Arrange();
-            Player player = new Player();
-            Player validPlayer = repo.Players[1];
+        //    var controller = new HomeController(repo);//test
+        //    var loginval = controller.LoginValidation(player) as ViewResult;//invalid player
 
-            var controller = new HomeController(repo);//test
-            var loginval = controller.LoginValidation(player) as ViewResult;//invalid player
+        //    //assert
+        //    Assert.Null(loginval.ViewData["playerCount"]);
+        //    Assert.Null(loginval.ViewData["playerNew"]);
+        //    Assert.Null(loginval.ViewData["duelsCount"]);
+        //    Assert.NotEqual(validPlayer, loginval.Model);
+        //    Assert.Equal(repo.Players[0], loginval.Model);
 
-            //assert
-            Assert.Null(loginval.ViewData["playerCount"]);
-            Assert.Null(loginval.ViewData["playerNew"]);
-            Assert.Null(loginval.ViewData["duelsCount"]);
-            Assert.NotEqual(validPlayer, loginval.Model);
-            Assert.Equal(repo.Players[0], loginval.Model);
-
-            var loginval2 = controller.LoginValidation(validPlayer) as ViewResult;//test valid
-            //assert
-            Assert.Equal(1, loginval2.ViewData["playerCount"]);
-            Assert.Equal(validPlayer.Username, loginval2.ViewData["playerNew"].ToString());
-            Assert.Equal(0, loginval2.ViewData["duelsCount"]);
-            Assert.Equal(validPlayer, loginval2.Model);
-        }
+        //    var loginval2 = controller.LoginValidation(validPlayer) as ViewResult;//test valid
+        //    //assert
+        //    Assert.Equal(1, loginval2.ViewData["playerCount"]);
+        //    Assert.Equal(validPlayer.Username, loginval2.ViewData["playerNew"].ToString());
+        //    Assert.Equal(0, loginval2.ViewData["duelsCount"]);
+        //    Assert.Equal(validPlayer, loginval2.Model);
+        //}
         [Fact]
         public void Voting()
         {
@@ -177,7 +175,7 @@ namespace TermProjectTests
             Assert.True(repo.Players[0].Score == 1);
             Assert.True(repo.Players[1].Score == 1);
             Assert.Equal(1, voteVal.ViewData["playerCount"]);
-            Assert.Equal(v.player.Username, voteVal.ViewData["playerNew"].ToString());
+            Assert.Equal(v.player.UserName, voteVal.ViewData["playerNew"].ToString());
             Assert.Equal(0, voteVal.ViewData["duelsCount"]);
             Assert.Equal(v.player, voteVal.Model);
             Assert.NotEqual(repo.Players[0], voteVal.Model);
@@ -196,7 +194,7 @@ namespace TermProjectTests
             Assert.True(repo.Players[0].Voted);
             Assert.True(repo.Players[0].Score == 2);
             Assert.Equal(1, voteVal.ViewData["playerCount"]);
-            Assert.Equal(v.player.Username, voteVal.ViewData["playerNew"].ToString());
+            Assert.Equal(v.player.UserName, voteVal.ViewData["playerNew"].ToString());
             Assert.Equal(0, voteVal.ViewData["duelsCount"]);
             Assert.Equal(v.player, voteVal.Model);
             Assert.NotEqual(repo.Players[0], voteVal.Model);
@@ -206,7 +204,8 @@ namespace TermProjectTests
         {
             Arrange();
             Player player = new Player();
-            repo.Players.Add(new Player() { PlayerID = 3, Username = "valid player", 
+            repo.Players.Add(new Player() { PlayerID = 3,
+                UserName = "valid player", 
                 DuelCard = new Card() { CreatorID = 3 } });
             Player invalidPlayer = repo.Players[1];
             Player validPlayer = repo.Players[2];
@@ -231,7 +230,7 @@ namespace TermProjectTests
             repo.Players.Add(new Player()
             {
                 PlayerID = 3,
-                Username = "test player",
+                UserName = "test player",
                 DuelCard = new Card() { CreatorID = 3, Text = null }
             });
             Player player = repo.Players[2];
@@ -338,7 +337,7 @@ namespace TermProjectTests
             Player player = new Player()
             {
                 PlayerID = 3,
-                Username = "test player",
+                UserName = "test player",
                 DuelCard = new Card() { CreatorID = 3, Text = null }
             };
             AllCardsViewModels v = new AllCardsViewModels()
@@ -359,14 +358,14 @@ namespace TermProjectTests
             Player player2 = new Player()
             {
                 PlayerID = 3,
-                Username = "test",
+                UserName = "test",
                 Password = "test",
                 DuelCard = repo.Cards[0]
             };
             v.player = new Player()
             {
                 PlayerID = 3,
-                Username = "test",
+                UserName = "test",
                 Password = "not right",
                 DuelCard = repo.Cards[0]
             };
@@ -384,7 +383,7 @@ namespace TermProjectTests
             v.player = new Player()
             {
                 PlayerID = 3,
-                Username = "test",
+                UserName = "test",
                 Password = null,
                 DuelCard = repo.Cards[0]
             };
@@ -400,7 +399,7 @@ namespace TermProjectTests
             v.player = new Player()
             {
                 PlayerID = 3,
-                Username = null,
+                UserName = null,
                 Password = "test",
                 DuelCard = repo.Cards[0]
             };

@@ -82,7 +82,7 @@ namespace TermProjectTests
             Arrange();
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -93,7 +93,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,
@@ -153,7 +153,7 @@ namespace TermProjectTests
 
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -164,7 +164,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,
@@ -232,7 +232,7 @@ namespace TermProjectTests
 
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -243,7 +243,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,

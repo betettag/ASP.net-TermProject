@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "Log in";
+    ViewData["Username"] = "Guest";
+    ViewData["Score"] = 0;
+    ViewData["BootStrap"] = true;
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -15,12 +18,12 @@
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
-                    <input asp-for="Input.Email" class="form-control" />
+                    <input asp-for="Input.Email" class="form-control" value="admin@example.com"/>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Password"></label>
-                    <input asp-for="Input.Password" class="form-control" />
+                    <input asp-for="Input.Password" class="form-control" value="Secret1!"/>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -36,7 +39,7 @@
                 </div>
                 <div class="form-group">
                     <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        <a hidden id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
@@ -46,7 +49,7 @@
         </section>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        <section>
+        <section class="text-hide">
             <h4>Use another service to log in.</h4>
             <hr />
             @{

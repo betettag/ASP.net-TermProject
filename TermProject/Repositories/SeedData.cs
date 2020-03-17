@@ -113,7 +113,8 @@ namespace TermProject.Repositories
                     Score = 0,
                     IsDueling = false,
                     Voted = true,
-                    DuelCard = whitecard2
+                    DuelCard = whitecard2,
+                    Password = "pass"
                 };
                 Player seedPlayer = new Player()
                 {
