@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace TermProject.Controllers
 {
-    [Authorize]
+
     public class AccountController : Controller
     {
         private UserManager<Player> userManager;
@@ -31,8 +31,7 @@ namespace TermProject.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel details,
-                string returnUrl)
+        public async Task<IActionResult> Login(LoginModel details,string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -45,7 +44,9 @@ namespace TermProject.Controllers
                                 user, details.Password, false, false);
                     if (result.Succeeded)
                     {
-                        return Redirect(returnUrl ?? "/");
+                        if(!string.IsNullOrEmpty(returnUrl))//goes back to original url
+                            return Redirect(returnUrl ?? "/");
+                        return RedirectToAction("Index", "Home");
                     }
                 }
                 ModelState.AddModelError(nameof(LoginModel.Email),

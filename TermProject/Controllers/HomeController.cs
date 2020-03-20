@@ -74,27 +74,19 @@ namespace TermProject.Controllers
             return Index();
         }
         [Authorize(Roles = "Member, Admins")]
-        public async Task<IActionResult> AddCard(Player p)
+        public IActionResult AddCard()
         {
-            var user = await userManager.GetUserAsync(HttpContext.User);
-            Card card = new Card()
-            {
-                CreatorID = user.PlayerID,
-                IsPrompt = false
-            };
-            p.DuelCard = card;//setting card to be passed
-            return View(p);
+            return View();
         }
         [HttpGet]
-        public IActionResult AddCardValidation(Player player)
+        public IActionResult AddCardValidation(Card card)
         {
             //Player player = Repository.Players.Find(p => p.PlayerID == p.DuelCard.CreatorID);//getting player from player id
 
-            if (player.DuelCard.Text == "" || player.DuelCard.Text == null || player.DuelCard.CreatorID <= 1 
-                && Repository.WhiteCards.Where(c => c.Text == player.DuelCard.Text) != null)//do not write duplicate or bad card
+            if (!ModelState.IsValid)//do not write duplicate or bad card
             {
                 ModelState.AddModelError("Validation", "Card Error ");
-                return View("AddCard", player);
+                return View("AddCard");
             }
 
             const string CensoredText = "[Censored]";
@@ -106,34 +98,21 @@ namespace TermProject.Controllers
             IEnumerable<Regex> badWordMatchers = badWords.
                 Select(x => new Regex(string.Format(PatternTemplate, x), Options));
 
-            string input = player.DuelCard.Text;
+            string input = card.Text;
 
             string output = badWordMatchers.//matching
             Aggregate(input, (current, matcher) => matcher.Replace(current, CensoredText));
 
-            player.DuelCard.Text = output;//replacing text
-            player.DuelCard.IsPrompt = false;
-            Repository.Cards.Add(player.DuelCard);//adding white card
-            player = Repository.Players.Find(p => p.PlayerID == player.DuelCard.CreatorID);
+            card.Text = output;//replacing text
+            card.IsPrompt = false;
+            Repository.Cards.Add(card);//adding white card
             ModelState.AddModelError("Validation", "Card Added ");
-            var viewModel = new AllCardsViewModels()
-            {
-                Cards = Repository.Cards, //passing the player and cards
-                player = player
-            };
-            return View("AllCards", viewModel);
+            return View("AllCards", Repository.Cards);
         }
-        public IActionResult AllCards(Player p)
+        [AllowAnonymous]
+        public IActionResult AllCards()
         {
-            if (p.PlayerID == 0 || p.UserName == null)
-            {
-                p = Repository.Players[0];
-            }
-            var viewModel = new AllCardsViewModels() {
-                Cards = Repository.Cards, //passing the player and cards
-                player = p
-            };
-            return View(viewModel);
+            return View(Repository.Cards);
         }
         [Authorize(Roles = "Members, Admins")]
         public async Task<IActionResult> NewDuel()

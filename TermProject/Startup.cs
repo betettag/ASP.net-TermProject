@@ -77,6 +77,16 @@ namespace TermProject
             services.AddTransient<IPasswordValidator<Player>, CustomPasswordValidator>();
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
                 Configuration["ConnectionStrings:LocalDbConnection"]));
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.LoginPath = "/Account/Login"; //to be changed
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true;
+                options.ReturnUrlParameter = "returnUrl";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

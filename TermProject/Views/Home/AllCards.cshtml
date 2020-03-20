@@ -1,5 +1,5 @@
 ﻿
-@model TermProject.ViewModels.AllCardsViewModels
+@model List<Card>
 @{
     ViewData["Title"] = "All Cards";
     ViewData["BootStrap"] = true;
@@ -24,15 +24,15 @@
     <div class="container-fluid py-2">
         <h2 class="font-weight-light">All White Cards (scroll sideways?)</h2>
         <div class="d-flex flex-row flex-nowrap">
-            @for (int i = 0;  i<Model.Cards.Count(); i++)
+            @for (int i = 0;  i<Model.Count(); i++)
             {
-                if (Model.Cards[i].IsPrompt == true)
+                if (Model[i].IsPrompt == true)
                 {
-                    <div class="card card-body white-text" style="background-color: black">@Model.Cards[i].Text</div>
+                    <div class="card card-body white-text" style="background-color: black">@Model[i].Text</div>
                 }
                 else
                 {
-                    <div class="card card-body btn-outline-black">@Model.Cards[i].Text</div>
+                    <div class="card card-body btn-outline-black">@Model[i].Text</div>
                 }
             }
             <div class="card card-body btn-outline-black">This Card Wins ;P</div>
