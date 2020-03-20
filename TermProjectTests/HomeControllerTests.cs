@@ -212,13 +212,13 @@ namespace TermProjectTests
             Player validPlayer = repo.Players[2];
             //test
             var controller = new HomeController(repo);
-            var addcard = controller.AddCard(player) as ViewResult;//error
+            var addcard = controller.AddCardAsync(player) as ViewResult;//error
 
             //assert
             Assert.Equal(repo.Players[0], addcard.Model);
 
             //test
-            var addcard2 = controller.AddCard(validPlayer) as ViewResult;//valid
+            var addcard2 = controller.AddCardAsync(validPlayer) as ViewResult;//valid
 
             //assert
             Assert.Equal(validPlayer, addcard2.Model);

@@ -1,10 +1,6 @@
 ﻿
-@model Player;
 @{
     ViewData["Title"] = "Home Page";
-    ViewData["Player"]= Model;
-    ViewData["Username"]= Model.Username;
-    ViewData["Score"] = Model.Score;
     ViewData["BootStrap"] = true;
 }
 <html>
@@ -30,15 +26,10 @@
                 <h5 class="card-title">Stats</h5>
                 <p class="card-text">
                     Player Count: @ViewBag.playerCount<br />
-                    Newest Player:
-                    @if (ViewBag.playerNew == "Guest")
-                    {
-                        ViewBag.playerNew = "Nobody :<";
-                    }
-                    @ViewBag.playerNew<br />
+                    Newest Player:@ViewBag.playerNew<br />
                     Duels: @ViewBag.duelsCount
                 </p>
-                <a class="btn btn-black" href="@Url.Action("HighScores","Home", ViewData["Player"]);">See the High Scores!</a>
+                <a class="btn btn-black" href="@Url.Action("HighScores","Home")">See the High Scores!</a>
                 <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
             </div>
         </div>
@@ -58,6 +49,5 @@
                 <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>*@
         </div>
-    </div>
 </body>
 </html>

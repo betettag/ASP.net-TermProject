@@ -1,9 +1,6 @@
 ﻿@model TermProject.ViewModels.VotingViewModel
 @{
     ViewData["Title"] = "Vote plz :<";
-    ViewData["Username"] = Model.player.Username;
-    ViewData["Player"] = Model.player;
-    ViewData["Score"] = Model.player.Score;
     ViewData["BootStrap"] = true;
     var duels = Model.Duels.Where(d => d.Players.Count() == 2).ToList();
 }
@@ -72,7 +69,7 @@
                                 </p>
                                 <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
                             </div>
-                            Answer by @d.Players[0].Username
+                            Answer by @d.Players[0].UserName
                         </div>
                     </label>
                     <label class="radio" style="border-left-width:10px; border-left:10px; justify-content:center;">
@@ -86,7 +83,7 @@
                                 </p>
                                 <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
                             </div>
-                            <div class="text-black-50">Answer by @d.Players[1].Username</div>
+                            <div class="text-black-50">Answer by @d.Players[1].UserName</div>
                         </div>
                     </label>
                     <input asp-for="duel.VoterID" hidden value="@Model.player.PlayerID">

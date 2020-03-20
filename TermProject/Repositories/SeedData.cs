@@ -4,19 +4,58 @@ using System.Linq;
 using System.Threading.Tasks;
 using TermProject.Models;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TermProject.Repositories
 {
     public class SeedData
     {
-        public static void Seed(AppDbContext context)
+        public static async Task SeedAsync(AppDbContext context, UserManager<Player> usrMgr, RoleManager<IdentityRole> roleMgr, IConfiguration configuration)
         {
             if (!context.Tournaments.Any())
             {
+
+                UserManager<Player> userManager = usrMgr;
+                RoleManager<IdentityRole> roleManager = roleMgr;
+
                 Card whitecard = new Card();
                 whitecard.Text = "Undoubtedly White Card";
                 whitecard.IsPrompt = false;
                 whitecard.CreatorID = 1;
+                context.Cards.Add(whitecard);
+
+                // Getting user info out of appsettings.json   
+                string username = configuration["Data:AdminUser:Name"];
+                string email = configuration["Data:AdminUser:Email"];
+                string password = configuration["Data:AdminUser:Password"];
+                string role = configuration["Data:AdminUser:Role"];
+
+                if (await userManager.FindByNameAsync(username) == null)
+                {
+                    if (await roleManager.FindByNameAsync(role) == null)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                        await roleManager.CreateAsync(new IdentityRole("Member"));
+                    }
+
+                    Player user = new Player
+                    {
+                        UserName = username,
+                        Email = email,
+                        Score = 1,
+                        Voted = false,
+                        IsDueling = false,
+                        DuelCard = whitecard,
+                        ProfilePicture = "profile.png"
+                    };
+                    IdentityResult result = await userManager
+                    .CreateAsync(user, password);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, role);
+                    }
+                }
 
                 Card whitecard2 = new Card();
                 whitecard2.Text = "Undeniably White Card";
@@ -70,44 +109,45 @@ namespace TermProject.Repositories
                     context.Cards.Add(new Card() { Text = card, IsPrompt = true });
                 }
 
-                Player guestPlayer = new Player()
-                {
-                    Username = "Guest",
-                    Score = 0,
-                    IsDueling = false,
-                    Voted = true,
-                    DuelCard = whitecard2
-                };
                 Player seedPlayer = new Player()
                 {
-                    Username = "Gino :<",
+                    UserName = "SeedPlayer",
                     Score = 1,
-                    IsDueling = true,
-                    Voted = false,
-                    DuelCard = whitecard,
-                    Password = "pass"
+                    IsDueling = false,
+                    Voted = true,
+                    DuelCard = whitecard2,
+                    Password = "pass",
+                    ProfilePicture = "profile.png"
                 };
-
-                Duel guestDuel = new Duel();
-                guestDuel.Players = new List<Player>();
-                guestDuel.Players.Add(guestPlayer);
-                guestDuel.Prompt = blackcard;
-                guestDuel.Players.Add(seedPlayer);
+                //Player seedPlayer = new Player()
+                //{
+                //    UserName = "SeedPlayer2",
+                //    Score = 1,
+                //    IsDueling = true,
+                //    Voted = false,
+                //    DuelCard = whitecard,
+                //    Password = "pass"
+                //};
+                context.Cards.Add(whitecard2);
+                context.Cards.Add(blackcard);
+                Duel seedDuel = new Duel();
+                seedDuel.Players = new List<Player>();
+                //seedDuel.Players.Add(guestPlayer);
+                seedDuel.Prompt = blackcard;
+                seedDuel.Players.Add(seedPlayer);
 
                 Tournament FirstTournament = new Tournament();
                 FirstTournament.Duels = new List<Duel>();
-                FirstTournament.Duels.Add(guestDuel);
+                FirstTournament.Duels.Add(seedDuel);
                 FirstTournament.ExpiryTime = DateTime.Now.AddDays(7);
 
-                context.Cards.Add(whitecard);
-                context.Cards.Add(blackcard);
-                context.Cards.Add(whitecard2);
-                context.Players.Add(guestPlayer);
-                context.Players.Add(seedPlayer);
-                context.Duels.Add(guestDuel);
+
+
+
+                context.Duels.Add(seedDuel);
                 context.Tournaments.Add(FirstTournament);
-                
-                
+
+
                 context.SaveChanges(); // save all the data
             }
         }

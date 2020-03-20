@@ -1,9 +1,6 @@
-﻿@model TermProject.ViewModels.HighScoresViewModel
+﻿@model List<Player>
 @{
     ViewData["Title"] = "High Scores";
-    ViewData["Username"] = Model.player.Username;
-    ViewData["Player"]= Model.player;
-    ViewData["Score"] = Model.player.Score;
     ViewData["BootStrap"] = true;
 }
 
@@ -24,13 +21,13 @@
             High Scores
         </h1>
         <ol style="list-style-type:none; padding-inline-start:0px;">
-            @if (Model.Players.Any())
+            @if (Model.Any())
             {
-                Model.Players = Model.Players.OrderByDescending(p => p.Score).Take(5).ToList();
-                foreach (Player p in Model.Players)
+                var players = Model.OrderByDescending(p => p.Score).Take(5).ToList();
+                foreach (Player p in players)
                 {
                     <li>
-                        <mark>@p.Username</mark>
+                        <mark>@p.UserName</mark>
                         <small>@p.Score</small>
                     </li>
                 }
