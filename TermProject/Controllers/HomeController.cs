@@ -50,6 +50,7 @@ namespace TermProject.Controllers
         //    ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
         //    return View ("Index",p);//returns home for a valid user
         //}
+        [Authorize(Roles = "Members, Admins")]
         public IActionResult Voting(Player p)//later tm
         {
             Repository.ResetTournament();
@@ -67,6 +68,7 @@ namespace TermProject.Controllers
             return Index();
         }
         [HttpGet]
+        [Authorize(Roles = "Members, Admins")]
         public IActionResult Voted(VotingViewModel v)//post for after voting
         {
             Player player = Repository.UpdateDuelVotesAndScore(v.duel);
@@ -79,6 +81,7 @@ namespace TermProject.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize(Roles = "Members, Admins")]
         public IActionResult AddCardValidation(Card card)
         {
             //Player player = Repository.Players.Find(p => p.PlayerID == p.DuelCard.CreatorID);//getting player from player id
@@ -121,32 +124,39 @@ namespace TermProject.Controllers
             Repository.ResetTournament();//reset if expired
             
             if (user.IsDueling == false)//not going to let a user duel twice
-                return View(Repository.Cards);
+                return View(new AllCardsViewModels() { Cards = Repository.Cards, white_card = new Card() { } });
             return Index();
         }
         [HttpGet]
-        public IActionResult NewDuelValidation(AllCardsViewModels v) 
+        [Authorize(Roles = "Members, Admins")]
+        public async Task<IActionResult> NewDuelValidation(AllCardsViewModels v) 
         {
-            Player player;
-            if (Repository.Players.Find(p => p.UserName == v.player.UserName && p.Password != v.player.Password) != null 
-                || v.player.UserName == null || v.player.Password == null || v.player.UserName == " " || v.player.Password ==" ") 
-            {//basic validation
-                player = Repository.Players.Find(p => p.PlayerID == v.player.PlayerID);
+            //Player player;
+            //if (Repository.Players.Find(p => p.UserName == v.player.UserName && p.Password != v.player.Password) != null 
+            //    || v.player.UserName == null || v.player.Password == null || v.player.UserName == " " || v.player.Password ==" ") 
+            //{//basic validation
+            //    player = Repository.Players.Find(p => p.PlayerID == v.player.PlayerID);
+            if (ModelState.IsValid) { 
                 var viewModel = new AllCardsViewModels()
                 {
                     Cards = Repository.Cards, //passing the player and cards
-                    player = player
+                    white_card = new Card() { }
                 };
+                foreach (var error in ModelState)
+                {
+                    ModelState.AddModelError(string.Empty, error.Value.ToString());
+                }
                 return View(viewModel);//return view again if player has been found to avoid duplicates
             }
             Repository.Tournaments[0].Duels.First();//testing
             //Repository.ResetTournament();//reset tournament if a week has passed. keeps players
-            player = Repository.AddPlayerToDuel(v.player);//reusing variable and adding player to duel
+            var player = await userManager.GetUserAsync(HttpContext.User);
+            Repository.AddPlayerToDuel(player);//reusing variable and adding player to duel
             //Repository.Tournaments[0].Duels.First();//testing
             ViewBag.playerCount = Repository.Players.Count() - 1;
             ViewBag.playerNew = Repository.Players.Last().UserName;//random stats
             ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
-            return View("Index", player);
+            return Index();
         }
         [AllowAnonymous]
         public ActionResult HighScores()

@@ -3,8 +3,9 @@
     ViewData["Title"] = "New Duel";
     ViewData["BootStrap"] = true;
     Random rnd = new Random();
-    var cards = Model.Cards.Where(c => c.IsPrompt == false && c.CardID != 12).OrderBy(c => Guid.NewGuid()).Take(5);
-    var prompt = Model.Cards.Where(c => c.IsPrompt == true && c.CardID != 11 && c.CardID != 13).OrderBy(c => Guid.NewGuid()).First();
+    var cards = Model.Cards.Where(c => c.IsPrompt == false && c.CardID != 1 && c.CardID != 3).OrderBy(c => Guid.NewGuid()).Take(5);
+    var prompt = Model.Cards.Where(c => c.IsPrompt == true && c.Text != "Pick The Whiter Card. (There is a right answer)...").OrderBy(c => Guid.NewGuid()).First();
+    string card34 = null;
 }
 
 
@@ -67,7 +68,7 @@
                 @foreach (Card c in cards)
                 {
                     <label class="radio" style="border-left-width:10px; border-left:10px; justify-content:center;">
-                        @Html.RadioButtonFor(model => model.player.CardID, c.CardID, new { @class = "card-input-element d-none" })
+                        @Html.RadioButtonFor(model => model.white_card.CardID, c.CardID, new { @class = "card-input-element d-none" })
                         <!--<input type="radio" asp-for="duel.VotesP1" class="card-input-element d-none" value=";" />-->
                         <div class="card bg-white text-center" style="width: 18rem;">
                             <div class="card-body text-white card-input">
@@ -84,8 +85,8 @@
 
 
                 }
-                <input asp-for="player.PlayerID" hidden value="@Model.player.PlayerID">
-                <input asp-for="player.PromtID" hidden value="@prompt.CardID">
+                @*<input asp-for="player.PlayerID" hidden value="@Model.player.PlayerID">*@
+                <input asp-for="black_card.CardID" hidden value="@prompt.CardID">
             </div>
             <button type="submit" value="Submit" class="btn btn-outline-white">Submit</button>
         }

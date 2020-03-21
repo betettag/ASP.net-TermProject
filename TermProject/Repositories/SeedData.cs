@@ -47,7 +47,8 @@ namespace TermProject.Repositories
                         Voted = false,
                         IsDueling = false,
                         DuelCard = whitecard,
-                        ProfilePicture = "profile.png"
+                        ProfilePicture = "profile.png",
+                        Password = "Secret1!"
                     };
                     IdentityResult result = await userManager
                     .CreateAsync(user, password);
@@ -66,6 +67,9 @@ namespace TermProject.Repositories
                 blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
                 blackcard.IsPrompt = true;
                 blackcard.CreatorID = 1;
+                context.Cards.Add(whitecard2);
+                context.Cards.Add(blackcard);
+
 
                 Card blackcard2 = new Card();
                 blackcard2.Text = "Im going to cleanse this week, nothing but kale and ...";
@@ -129,11 +133,10 @@ namespace TermProject.Repositories
                 //    DuelCard = whitecard,
                 //    Password = "pass"
                 //};
-                context.Cards.Add(whitecard2);
-                context.Cards.Add(blackcard);
+
                 Duel seedDuel = new Duel();
                 seedDuel.Players = new List<Player>();
-                //seedDuel.Players.Add(guestPlayer);
+                seedDuel.Players.Add(await userManager.FindByNameAsync("Admin"));
                 seedDuel.Prompt = blackcard;
                 seedDuel.Players.Add(seedPlayer);
 
@@ -148,6 +151,23 @@ namespace TermProject.Repositories
                 context.Duels.Add(seedDuel);
                 context.Tournaments.Add(FirstTournament);
 
+                Card whitecard3 = new Card();
+                whitecard3.Text = "Projectile Fart";
+                whitecard3.IsPrompt = false;
+                whitecard3.CreatorID = 1;
+                context.Cards.Add(whitecard3);
+
+                Card whitecard4 = new Card();
+                whitecard4.Text = "Free Coronavirus";
+                whitecard4.IsPrompt = false;
+                whitecard4.CreatorID = 1;
+                context.Cards.Add(whitecard4);
+
+                Card whitecard5 = new Card();
+                whitecard5.Text = "A bag of magic beans";
+                whitecard5.IsPrompt = false;
+                whitecard5.CreatorID = 1;
+                context.Cards.Add(whitecard5);
 
                 context.SaveChanges(); // save all the data
             }

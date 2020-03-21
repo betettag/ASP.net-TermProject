@@ -238,7 +238,7 @@ namespace TermProjectTests
             int prevValue = repo.Cards.Count();
             //test
             var controller = new HomeController(repo);
-            var addcardval = controller.AddCardValidation(player) as ViewResult;//error
+            var addcardval = controller.AddCardValidation(player.DuelCard) as ViewResult;//error
 
             //assert
             Assert.Equal(player, addcardval.Model);
@@ -258,7 +258,7 @@ namespace TermProjectTests
             player = repo.Players[2];
             player.DuelCard.CreatorID = 0;
 
-            var addcardval3 = controller.AddCardValidation(player) as ViewResult;//error
+            var addcardval3 = controller.AddCardValidation(player.DuelCard) as ViewResult;//error
 
             //assert
             Assert.Equal(repo.Players[2], addcardval3.Model);
@@ -269,7 +269,7 @@ namespace TermProjectTests
             player.DuelCard.CreatorID = 3;
             player.DuelCard = repo.Cards[0];
 
-            var addcardval4 = controller.AddCardValidation(player) as ViewResult;//error
+            var addcardval4 = controller.AddCardValidation(player.DuelCard) as ViewResult;//error
 
             //assert
             Assert.Equal(repo.Players[2], addcardval4.Model);
@@ -280,7 +280,7 @@ namespace TermProjectTests
             player.DuelCard.CreatorID = 3;
             player.DuelCard = new Card() { CreatorID = 3, Text = "validCard" };
 
-            var addcardval5 = controller.AddCardValidation(player) as ViewResult;//valid
+            var addcardval5 = controller.AddCardValidation(player.DuelCard) as ViewResult;//valid
 
             //assert
             Assert.Equal(new AllCardsViewModels().GetType(), addcardval5.Model.GetType());
@@ -349,7 +349,7 @@ namespace TermProjectTests
             int prevValue = repo.Players.Count();
             //test
             var controller = new HomeController(repo);
-            var newduelval = controller.NewDuelValidation(v) as ViewResult;//error
+            var newduelval = controller.NewDuelValidationAsync(v) as ViewResult;//error
 
             //assert
             Assert.Equal(new AllCardsViewModels().GetType(), newduelval.Model.GetType());
@@ -373,7 +373,7 @@ namespace TermProjectTests
             repo.Players.Add(player2);
             prevValue = repo.Players.Count();
 
-            var newduelval2 = controller.NewDuelValidation(v) as ViewResult;//error
+            var newduelval2 = controller.NewDuelValidationAsync(v) as ViewResult;//error
 
             //assert
             Assert.Equal(new AllCardsViewModels().GetType(), newduelval2.Model.GetType());
@@ -389,7 +389,7 @@ namespace TermProjectTests
                 DuelCard = repo.Cards[0]
             };
 
-            var newduelval3 = controller.NewDuelValidation(v) as ViewResult;//error
+            var newduelval3 = controller.NewDuelValidationAsync(v) as ViewResult;//error
             
             //assert
             Assert.Equal(new AllCardsViewModels().GetType(), newduelval3.Model.GetType());
@@ -405,7 +405,7 @@ namespace TermProjectTests
                 DuelCard = repo.Cards[0]
             };
             
-            var newduelval4 = controller.NewDuelValidation(v) as ViewResult;//error
+            var newduelval4 = controller.NewDuelValidationAsync(v) as ViewResult;//error
 
             //assert
             Assert.Equal(new AllCardsViewModels().GetType(), newduelval4.Model.GetType());
@@ -416,7 +416,7 @@ namespace TermProjectTests
             prevValue = repo.Players.Count();
             int prevValueDuels = repo.Tournaments[0].Duels.Count();
 
-            var newduelval5 = controller.NewDuelValidation(v) as ViewResult;//error
+            var newduelval5 = controller.NewDuelValidationAsync(v) as ViewResult;//error
 
             //assert
             Assert.Equal(repo.Players[2], newduelval5.Model);

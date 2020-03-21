@@ -66,7 +66,7 @@
                         @*<partial name="_LoginPartial" />*@
                         @if (user == null)
                         {
-                            <a class="nav-link waves-effect waves-light" id="login" asp-controller="Account" asp-action="Login">
+                            <a class="nav-link waves-effect waves-light" id="login" asp-controller="Account" asp-action="Login"  asp-route-returnUrl=@Context.Request.Path>
                                 Guest
                                 @("Login/Register Here")
                             </a>
@@ -93,7 +93,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
                                  aria-labelledby="navbarDropdownMenuLink-55">
-                                <a class="dropdown-item" href="#">Register</a>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Registration" asp-route-returnUrl=@Context.Request.Path>Register</a>
                             </div>
                         </li>
                     }
@@ -107,10 +107,11 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
                                  aria-labelledby="navbarDropdownMenuLink-55">
-                                <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Log Out</a>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Logout" asp-route-returnUrl=@Context.Request.Path>Log Out</a>
                                 @if (this.User.IsInRole("Admins"))
                                 {
                                     <a class="dropdown-item" asp-controller="RoleAdmin" asp-action="Index">Manage Roles</a>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Manage Accounts</a>
                                 }
                             </div>
                         </li>

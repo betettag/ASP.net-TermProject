@@ -24,7 +24,7 @@
         <div class="text-danger" asp-validation-summary="All"></div>
         <div class="col-md-6 col-sm-12">
             <div class="login-form">
-                <form asp-action="Login" method="post">
+                <form asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div class="form-group">
                         <label asp-for="Email"></label>
                         <input asp-for="Email" type="text" class="form-control" placeholder="admin@example.com">
@@ -34,8 +34,9 @@
                         <input asp-for="Password" type="password" class="form-control" placeholder="Secret1!">
                     </div>
                     <button type="submit" class="btn btn-black">Log in</button>
-                    <a class="btn btn-grey" href="@Url.Action("NewDuel","Home", ViewData["Player"]);">Register / Create a Duel</a>
-                    <a class="btn btn-white" href="@Url.Action("Index","Home", ViewData["Player"]);">Home</a>
+                    <a class="btn btn-grey" href="@Url.Action("Registration","Account",null)">Register / Create a Duel</a>
+                    <a class="btn btn-white" href="@Url.Action("Index","Home")">Home</a>
+                    <input class="btn btn-outline-black" type="button" value="Go Back (-Gandalf)" onclick="history.back(-1)" />
                 </form>
             </div>
         </div>
