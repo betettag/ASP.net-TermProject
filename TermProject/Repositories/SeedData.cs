@@ -112,6 +112,7 @@ namespace TermProject.Repositories
                 Player seedPlayer = new Player()
                 {
                     UserName = "SeedPlayer",
+                    Email = "seedemail@email.com",
                     Score = 1,
                     IsDueling = false,
                     Voted = true,
