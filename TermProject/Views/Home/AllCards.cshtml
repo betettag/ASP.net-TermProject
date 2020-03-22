@@ -23,8 +23,9 @@
 <body>
     <div class="container-fluid py-2">
         <h2 class="font-weight-light">All White Cards (scroll sideways?)</h2>
+        <h3 class="text-warning text-center">@Html.ValidationMessage("Message")</h3>
         <div class="d-flex flex-row flex-nowrap">
-            @for (int i = 0;  i<Model.Count(); i++)
+            @for (int i = 0; i < Model.Count(); i++)
             {
                 if (Model[i].IsPrompt == true)
                 {

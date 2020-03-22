@@ -118,7 +118,7 @@ namespace TermProject.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Registration(RegisterModel model, string returnUrl)
         {
-            if (model.ProfileImage.Length < 5000000)
+            if (model.ProfileImage.Length > 5000000)
             {
                 ModelState.AddModelError(string.Empty, "im not amazon. too big of a pic");
             }

@@ -23,14 +23,17 @@ namespace TermProject.Controllers
             Repository = r;
             userManager = usrMgr;
         }
-        public IActionResult Index()
+        public IActionResult Index(string message)
         {
+            if (message != null)
+                ModelState.AddModelError("Message", message);
 
-            ViewBag.playerCount = Repository.Players.Count()-1;
+            ViewBag.playerCount = Repository.Players.Count();
             ViewBag.playerNew = Repository.Players.Last().UserName;//random stats
-            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count()-1;//guest doesnt count
+            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count();
             return View("Index");
         }
+                                                        //this is now done with identity
         //public IActionResult Logout(Player p)
         //{
         //        p = Repository.Players[0];
@@ -50,30 +53,40 @@ namespace TermProject.Controllers
         //    ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
         //    return View ("Index",p);//returns home for a valid user
         //}
-        [Authorize(Roles = "Members, Admins")]
-        public IActionResult Voting(Player p)//later tm
+        [Authorize(Roles = "Member, Admins")]
+        public async Task<IActionResult> Voting()//later tm
         {
             Repository.ResetTournament();
-
-            if(p.Voted != true)
+            Player player = await userManager.GetUserAsync(HttpContext.User);
+            if (player.Voted != true)
             {
                 var viewModel = new VotingViewModel();
                 viewModel.Duels = Repository.Tournaments[0].Duels;
-                viewModel.duel = new Duel();
-                viewModel.duel.Players = new List<Player>();
-                viewModel.duel.Players.Add(new Player());
-                viewModel.duel.Players.Add(new Player());
+                //viewModel.duel = new Duel();
+                //viewModel.duel.Players = new List<Player>();
+                //viewModel.duel.Players.Add(new Player());
+                //viewModel.duel.Players.Add(new Player());
                 return View(viewModel);
             }
-            return Index();
+            return Index("Already voted");
         }
-        [HttpGet]
-        [Authorize(Roles = "Members, Admins")]
-        public IActionResult Voted(VotingViewModel v)//post for after voting
+        [HttpPost]
+        [Authorize(Roles = "Member, Admins")]
+        public async Task<IActionResult> Voted(VotingViewModel v)//post for after voting
         {
-            Player player = Repository.UpdateDuelVotesAndScore(v.duel);
-
-            return Index();
+            Player player = await userManager.GetUserAsync(HttpContext.User);
+            if (player.Id == v.VotesPlayerId)
+                ModelState.AddModelError("Validation", "You cant vote for yourself :P");
+            if (ModelState.IsValid)
+            {
+                player.Voted = true;
+                if(v.VotesPlayerId == v.PlayerId1)
+                    await Repository.UpdateDuelVotesAndScore(v.PlayerId1);
+                else
+                    await Repository.UpdateDuelVotesAndScore(v.PlayerId2);
+                return Index("Successfully voted");
+            }
+            return await Voting();
         }
         [Authorize(Roles = "Member, Admins")]
         public IActionResult AddCard()
@@ -81,11 +94,11 @@ namespace TermProject.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Members, Admins")]
-        public IActionResult AddCardValidation(Card card)
+        [Authorize(Roles = "Member, Admins")]
+        public async Task<IActionResult> AddCardValidation(Card card)
         {
-            //Player player = Repository.Players.Find(p => p.PlayerID == p.DuelCard.CreatorID);//getting player from player id
-
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            card.CreatorID = user.UserName;
             if (!ModelState.IsValid)//do not write duplicate or bad card
             {
                 ModelState.AddModelError("Validation", "Card Error ");
@@ -108,8 +121,8 @@ namespace TermProject.Controllers
 
             card.Text = output;//replacing text
             card.IsPrompt = false;
-            Repository.Cards.Add(card);//adding white card
-            ModelState.AddModelError("Validation", "Card Added ");
+            Repository.AddWhiteCard(card);//adding white card
+            ModelState.AddModelError("Validation", "Card Added");
             return View("AllCards", Repository.Cards);
         }
         [AllowAnonymous]
@@ -117,53 +130,43 @@ namespace TermProject.Controllers
         {
             return View(Repository.Cards);
         }
-        [Authorize(Roles = "Members, Admins")]
+        [Authorize(Roles = "Member, Admins")]
         public async Task<IActionResult> NewDuel()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
             Repository.ResetTournament();//reset if expired
-            
-            if (user.IsDueling == false)//not going to let a user duel twice
-                return View(new AllCardsViewModels() { Cards = Repository.Cards, white_card = new Card() { } });
-            return Index();
+
+            if (user.IsDueling == false)
+            {//not going to let a user duel twice
+                return View("NewDuel",new AllCardsViewModels() { Cards = Repository.Cards,
+                    white_card = null, black_card = null });
+            }
+            return Index("Already in a Duel");
         }
+        
+        [Authorize(Roles = "Member, Admins")]
         [HttpGet]
-        [Authorize(Roles = "Members, Admins")]
         public async Task<IActionResult> NewDuelValidation(AllCardsViewModels v) 
         {
-            //Player player;
-            //if (Repository.Players.Find(p => p.UserName == v.player.UserName && p.Password != v.player.Password) != null 
-            //    || v.player.UserName == null || v.player.Password == null || v.player.UserName == " " || v.player.Password ==" ") 
-            //{//basic validation
-            //    player = Repository.Players.Find(p => p.PlayerID == v.player.PlayerID);
-            if (ModelState.IsValid) { 
-                var viewModel = new AllCardsViewModels()
-                {
-                    Cards = Repository.Cards, //passing the player and cards
-                    white_card = new Card() { }
-                };
-                foreach (var error in ModelState)
-                {
-                    ModelState.AddModelError(string.Empty, error.Value.ToString());
-                }
-                return View(viewModel);//return view again if player has been found to avoid duplicates
-            }
-            Repository.Tournaments[0].Duels.First();//testing
-            //Repository.ResetTournament();//reset tournament if a week has passed. keeps players
             var player = await userManager.GetUserAsync(HttpContext.User);
-            Repository.AddPlayerToDuel(player);//reusing variable and adding player to duel
-            //Repository.Tournaments[0].Duels.First();//testing
-            ViewBag.playerCount = Repository.Players.Count() - 1;
-            ViewBag.playerNew = Repository.Players.Last().UserName;//random stats
-            ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
-            return Index();
+            //if (v.white_card == null)//some validation
+            //    ModelState.AddModelError("Message", "please select a white card");
+
+            if (ModelState.IsValid) {
+                //find first open duel or create one
+
+                player.DuelCard = Repository.Cards.FirstOrDefault(c => c.CardID == v.white_card);
+                await Repository.AddPlayerToDuel((int)v.black_card, (int)v.white_card, player.Id);
+                return Index("You have been Added to a duel. dont forget to vote");
+            }
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            return await NewDuel();//return view again if errors happen
         }
         [AllowAnonymous]
         public ActionResult HighScores()
         {
             //passing player and list of players
-            var players = Repository.Players; //not passing Admin :<
-            players.RemoveAt(0);
+            var players = Repository.Players;
 
             return View(players);
         }

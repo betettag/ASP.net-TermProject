@@ -14,6 +14,6 @@ namespace TermProject.Models
         public string Text { get; set; }
         public int PlayedCount { get; set; }
         [Required]
-        public int CreatorID { get; set; }
+        public string CreatorID { get; set; }
     }
 }

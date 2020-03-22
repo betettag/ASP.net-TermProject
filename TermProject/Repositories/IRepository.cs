@@ -13,8 +13,9 @@ namespace TermProject.Repositories
         List<Card> Cards { get; }
         List<Player> Players { get; }
         List<Tournament> Tournaments { get; }
-        Player UpdateDuelVotesAndScore(Duel duel);
-        Player AddPlayerToDuel(Player player);
+        Task UpdateDuelVotesAndScore(string playerId);
+        Task AddPlayerToDuel(int black_card, int white_card, string playerId);
         void ResetTournament();
+        void AddWhiteCard(Card card);
     }
 }

@@ -170,7 +170,7 @@ namespace TermProjectTests
             v.duel.VoterID = 2;//invalid voter
 
             var controller = new HomeController(repo);//test
-            var voteVal = controller.Voted(v) as ViewResult;//invalid player
+            var voteVal = controller.VotedAsync(v) as ViewResult;//invalid player
 
             //assert
             Assert.False(repo.Players[1].Voted);//cant vote for yourself
@@ -191,7 +191,7 @@ namespace TermProjectTests
             v2.duel.VotesP2 = 0;
             v2.duel.VoterID = 2;//valid
 
-            var voteval2 = controller.Voted(v2) as ViewResult;//test valid
+            var voteval2 = controller.VotedAsync(v2) as ViewResult;//test valid
             //assert
             Assert.True(repo.Players[0].Voted);
             Assert.True(repo.Players[0].Score == 2);
@@ -238,7 +238,7 @@ namespace TermProjectTests
             int prevValue = repo.Cards.Count();
             //test
             var controller = new HomeController(repo);
-            var addcardval = controller.AddCardValidation(player.DuelCard) as ViewResult;//error
+            var addcardval = controller.AddCardValidationAsync(player.DuelCard) as ViewResult;//error
 
             //assert
             Assert.Equal(player, addcardval.Model);
@@ -258,7 +258,7 @@ namespace TermProjectTests
             player = repo.Players[2];
             player.DuelCard.CreatorID = 0;
 
-            var addcardval3 = controller.AddCardValidation(player.DuelCard) as ViewResult;//error
+            var addcardval3 = controller.AddCardValidationAsync(player.DuelCard) as ViewResult;//error
 
             //assert
             Assert.Equal(repo.Players[2], addcardval3.Model);
@@ -269,7 +269,7 @@ namespace TermProjectTests
             player.DuelCard.CreatorID = 3;
             player.DuelCard = repo.Cards[0];
 
-            var addcardval4 = controller.AddCardValidation(player.DuelCard) as ViewResult;//error
+            var addcardval4 = controller.AddCardValidationAsync(player.DuelCard) as ViewResult;//error
 
             //assert
             Assert.Equal(repo.Players[2], addcardval4.Model);
@@ -280,7 +280,7 @@ namespace TermProjectTests
             player.DuelCard.CreatorID = 3;
             player.DuelCard = new Card() { CreatorID = 3, Text = "validCard" };
 
-            var addcardval5 = controller.AddCardValidation(player.DuelCard) as ViewResult;//valid
+            var addcardval5 = controller.AddCardValidationAsync(player.DuelCard) as ViewResult;//valid
 
             //assert
             Assert.Equal(new AllCardsViewModels().GetType(), addcardval5.Model.GetType());
@@ -338,7 +338,7 @@ namespace TermProjectTests
             Player player = new Player()
             {
                 PlayerID = 3,
-                Username = "test player",
+                UserName = "test player",
                 DuelCard = new Card() { CreatorID = 3, Text = null }
             };
             AllCardsViewModels v = new AllCardsViewModels()
@@ -348,7 +348,7 @@ namespace TermProjectTests
             };
             int prevValue = repo.Players.Count();
             //test
-            var controller = new HomeController(repo);
+            var controller = new HomeController(repo,usrMgr);
             var newduelval = controller.NewDuelValidationAsync(v) as ViewResult;//error
 
             //assert
