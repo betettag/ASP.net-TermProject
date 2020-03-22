@@ -27,19 +27,19 @@ namespace TermProjectTests
             Card whitecard = new Card();
             whitecard.Text = "Undoubtedly White Card";
             whitecard.IsPrompt = false;
-            whitecard.CreatorID = 1;
+            whitecard.CreatorID = "seeded";
             whitecard.CardID = ++lastcardid;
 
             Card whitecard2 = new Card();
             whitecard2.Text = "Undeniably White Card";
             whitecard2.IsPrompt = false;
-            whitecard2.CreatorID = 1;
+            whitecard2.CreatorID = "seeded";
             whitecard2.CardID = ++lastcardid;
 
             Card blackcard = new Card();
             blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
             blackcard.IsPrompt = true;
-            blackcard.CreatorID = 1;
+            blackcard.CreatorID = "seeded";
             blackcard.CardID = ++lastcardid;
             repo.Cards.Add(whitecard);
             repo.Cards.Add(whitecard2);
@@ -51,23 +51,23 @@ namespace TermProjectTests
             Card whitecard = new Card();
             whitecard.Text = "Undoubtedly White Card";//arrange
             whitecard.IsPrompt = false;
-            whitecard.CreatorID = 1;
+            whitecard.CreatorID = "seeded";
             whitecard.CardID = ++lastcardid;
 
             Card whitecard2 = new Card();
             whitecard2.Text = "Undeniably White Card";
             whitecard2.IsPrompt = false;
-            whitecard2.CreatorID = 1;
+            whitecard2.CreatorID = "seeded";
             whitecard2.CardID = ++lastcardid;
 
             Card blackcard = new Card();
             blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
             blackcard.IsPrompt = true;
-            blackcard.CreatorID = 1;
+            blackcard.CreatorID = "seeded";
             blackcard.CardID = ++lastcardid;
 
-            repo.Cards.Add(whitecard);//test
-            repo.Cards.Add(whitecard2);
+            repo.AddWhiteCard(whitecard);//test
+            repo.AddWhiteCard(whitecard2);
             repo.Cards.Add(blackcard);
 
             //assert
@@ -82,7 +82,7 @@ namespace TermProjectTests
             Arrange();
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -93,7 +93,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,
@@ -133,19 +133,19 @@ namespace TermProjectTests
             Card whitecard = new Card();
             whitecard.Text = "Undoubtedly White Card";
             whitecard.IsPrompt = false;
-            whitecard.CreatorID = 1;
+            whitecard.CreatorID = "seeded";
             whitecard.CardID = ++lastcardid;
 
             Card whitecard2 = new Card();
             whitecard2.Text = "Undeniably White Card";
             whitecard2.IsPrompt = false;
-            whitecard2.CreatorID = 1;
+            whitecard2.CreatorID = "seeded";
             whitecard2.CardID = ++lastcardid;
 
             Card blackcard = new Card();
             blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
             blackcard.IsPrompt = true;
-            blackcard.CreatorID = 1;
+            blackcard.CreatorID = "seeded";
             blackcard.CardID = ++lastcardid;
             repo.Cards.Add(whitecard);
             repo.Cards.Add(whitecard2);
@@ -153,7 +153,7 @@ namespace TermProjectTests
 
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -164,7 +164,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,
@@ -212,19 +212,19 @@ namespace TermProjectTests
             Card whitecard = new Card();
             whitecard.Text = "Undoubtedly White Card";
             whitecard.IsPrompt = false;
-            whitecard.CreatorID = 1;
+            whitecard.CreatorID = "seeded";
             whitecard.CardID = ++lastcardid;
 
             Card whitecard2 = new Card();
             whitecard2.Text = "Undeniably White Card";
             whitecard2.IsPrompt = false;
-            whitecard2.CreatorID = 1;
+            whitecard2.CreatorID = "seeded";
             whitecard2.CardID = ++lastcardid;
 
             Card blackcard = new Card();
             blackcard.Text = "Pick The Whiter Card. (There is a right answer)...";
             blackcard.IsPrompt = true;
-            blackcard.CreatorID = 1;
+            blackcard.CreatorID = "seeded";
             blackcard.CardID = ++lastcardid;
             repo.Cards.Add(whitecard);
             repo.Cards.Add(whitecard2);
@@ -232,7 +232,7 @@ namespace TermProjectTests
 
             Player guestPlayer = new Player()
             {
-                Username = "Guest",
+                UserName = "Guest",
                 Score = 0,
                 IsDueling = false,
                 Voted = true,
@@ -243,7 +243,7 @@ namespace TermProjectTests
             };
             Player seedPlayer = new Player()
             {
-                Username = "Gino :<",
+                UserName = "Gino :<",
                 Score = 1,
                 IsDueling = true,
                 Voted = false,

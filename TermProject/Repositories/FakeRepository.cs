@@ -27,87 +27,116 @@ namespace TermProject.Repositories
         public List<Player> Players => players;
         public List<Tournament> Tournaments => tournaments;//getting all the data here
 
-        public Player AddPlayerToDuel(Player player)
+        public void AddWhiteCard(Card whiteCard)
+        {
+            if (whiteCard.IsPrompt == false && whiteCard.Text != null && whiteCard.Text != "")
+            {
+                Cards.Add(whiteCard);//if not black or empty card then add
+            }
+        }
+        public Task AddPlayerToDuel(int black_card, int white_card, string playerId)
         {
             ResetTournament();//reset if needed
-            Player newPlayer = player;//store previous values if player is new
-            player = Players.Find(p => (p.UserName == player.UserName) && (p.Password == player.Password));//find user
-            if (player == null)
+            var player = Players.FirstOrDefault(p =>p.Id ==playerId);
+            var duel = Tournaments[0].Duels.Where(d => d.Players.Count() == 1 || d.Player2ID == null).FirstOrDefault();
+            if (duel == null)
             {
-                player = newPlayer;
-                player.Score = 1;
-                if (Players.LastOrDefault() == null)
-                    player.PlayerID = 1;
-                else
+                duel = new Duel()
                 {
-                    player.PlayerID = Players.LastOrDefault().PlayerID+1;
-                }
+                    Player1ID = playerId,
+                    Prompt = Cards.FirstOrDefault(c => c.CardID == black_card),
+                    CardID = black_card,//create new duel
+                    Players = new List<Player>()
+                };
+                duel.Players.Add(player);
+                player.IsDueling = true;
+                //context.SaveChanges();
+                return Task.CompletedTask;
             }
-            player.PromtID = newPlayer.PromtID;
+            duel.Players.Add(player);//if it has found a spot ad another player
+            duel.Player2ID = player.Id;
             player.IsDueling = true;
-            player.DuelCard = Cards.Find(c => c.CardID == newPlayer.CardID);
+            return Task.CompletedTask;
+            //Player newPlayer = player;//store previous values if player is new
+            //player = Players.Find(p => (p.UserName == player.UserName) && (p.Password == player.Password));//find user
+            //if (player == null)
+            //{
+            //    player = newPlayer;
+            //    player.Score = 1;
+            //    if (Players.LastOrDefault() == null)
+            //        player.PlayerID = 1;
+            //    else
+            //    {
+            //        player.PlayerID = Players.LastOrDefault().PlayerID+1;
+            //    }
+            //}
+            //player.PromtID = newPlayer.PromtID;
+            //player.IsDueling = true;
+            //player.DuelCard = Cards.Find(c => c.CardID == newPlayer.CardID);
 
-            int duelid = tournaments[0].Duels.FindIndex(d => d.Players.Count() != 2);//getting duel that needs a player or null
-            if (duelid >= 0)//if duel not empty add player to list
-            {
-                Players.Add(player);
-                tournaments[0].Duels[duelid].Players.Add(player);
-            }
-            else
-            {
-                Duel newDuel = new Duel();
-                newDuel.Prompt = Cards.Find(c => c.CardID == player.PromtID);
-                newDuel.CardID = player.PromtID;
-                newDuel.Players = new List<Player>();
-                if(Tournaments.LastOrDefault().Duels.LastOrDefault() != null)
-                    newDuel.DuelID = Tournaments.LastOrDefault().Duels.LastOrDefault().DuelID+1;
-                if (newDuel.DuelID <= 0)
-                    newDuel.DuelID = 1;
-                newPlayer = player;
-                newDuel.Players.Add(newPlayer);//new duel add new player
-                Players.Add(newPlayer);
-                //context.Players.Update(player); not needed
-                Tournaments.First().Duels.Add(newDuel);
-            }
-            return player;
+            //int duelid = tournaments[0].Duels.FindIndex(d => d.Players.Count() != 2);//getting duel that needs a player or null
+            //if (duelid >= 0)//if duel not empty add player to list
+            //{
+            //    Players.Add(player);
+            //    tournaments[0].Duels[duelid].Players.Add(player);
+            //}
+            //else
+            //{
+            //    Duel newDuel = new Duel();
+            //    newDuel.Prompt = Cards.Find(c => c.CardID == player.PromtID);
+            //    newDuel.CardID = player.PromtID;
+            //    newDuel.Players = new List<Player>();
+            //    if(Tournaments.LastOrDefault().Duels.LastOrDefault() != null)
+            //        newDuel.DuelID = Tournaments.LastOrDefault().Duels.LastOrDefault().DuelID+1;
+            //    if (newDuel.DuelID <= 0)
+            //        newDuel.DuelID = 1;
+            //    newPlayer = player;
+            //    newDuel.Players.Add(newPlayer);//new duel add new player
+            //    Players.Add(newPlayer);
+            //    //context.Players.Update(player); not needed
+            //    Tournaments.First().Duels.Add(newDuel);
+            //}
+            //return player;
         }
 
-        public Player UpdateDuelVotesAndScore(Duel duel)
+        public Task UpdateDuelVotesAndScore(string playerId)
         {
-            bool flag;
-            int Votes;
-            int PlayerID;
-            if (duel.VotesP1 == 0)
-            {//modifying only one field and capturing variables
-                Votes = duel.VotesP2;
-                flag = false;
-                PlayerID = duel.Players[1].PlayerID;
-            }
-            else
-            {
-                Votes = duel.VotesP1;
-                flag = true;
-                PlayerID = duel.Players[0].PlayerID;
-            }
-            Player player = Players.Find(p => p.PlayerID == duel.VoterID);
-            Player player2 = Players.Find(p => p.PlayerID == Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID).Players.Find(p2 => p2.PlayerID == PlayerID).PlayerID);
-            if (player.Equals(player2))
-                return player; //cant vote for yourself try again
-            ++player2.Score;
-            ResetTournament();//reset if needed
-            player.Voted = true;
+            //bool flag;
+            //int Votes;
+            //int PlayerID;
+            //if (duel.VotesP1 == 0)
+            //{//modifying only one field and capturing variables
+            //    Votes = duel.VotesP2;
+            //    flag = false;
+            //    PlayerID = duel.Players[1].PlayerID;
+            //}
+            //else
+            //{
+            //    Votes = duel.VotesP1;
+            //    flag = true;
+            //    PlayerID = duel.Players[0].PlayerID;
+            //}
+            //Player player = Players.Find(p => p.PlayerID == duel.VoterID);
+            //Player player2 = Players.Find(p => p.PlayerID == Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID).Players.Find(p2 => p2.PlayerID == PlayerID).PlayerID);
+            //if (player.Equals(player2))
+            //    return Task.CompletedTask;
+            ////cant vote for yourself try again
+            //++player2.Score;
+            //ResetTournament();//reset if needed
+            //player.Voted = true;
 
 
-            duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
-            if (flag)
-            {
-                duel.VotesP2 = Votes;
-            }
-            else
-            {
-                duel.VotesP1 = Votes;
-            }
-            return player;
+            //duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
+            //if (flag)
+            //{
+            //    duel.VotesP2 = Votes;
+            //}
+            //else
+            //{
+            //    duel.VotesP1 = Votes;
+            //}
+            return Task.CompletedTask;
+
         }
         public void ResetTournament()
         {

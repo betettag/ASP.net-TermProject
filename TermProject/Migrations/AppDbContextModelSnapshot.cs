@@ -168,12 +168,10 @@ namespace TermProject.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -210,12 +208,10 @@ namespace TermProject.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -232,8 +228,9 @@ namespace TermProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CreatorID")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatorID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsPrompt")
                         .HasColumnType("bit");
@@ -242,6 +239,7 @@ namespace TermProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CardID");
@@ -259,6 +257,12 @@ namespace TermProject.Migrations
                     b.Property<int>("CardID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Player1ID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Player2ID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("TournamentID")
                         .HasColumnType("int");
 
@@ -274,6 +278,10 @@ namespace TermProject.Migrations
                     b.HasKey("DuelID");
 
                     b.HasIndex("CardID");
+
+                    b.HasIndex("Player1ID");
+
+                    b.HasIndex("Player2ID");
 
                     b.HasIndex("TournamentID");
 
@@ -397,6 +405,14 @@ namespace TermProject.Migrations
                         .HasForeignKey("CardID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TermProject.Models.Player", "Player1")
+                        .WithMany()
+                        .HasForeignKey("Player1ID");
+
+                    b.HasOne("TermProject.Models.Player", "Player2")
+                        .WithMany()
+                        .HasForeignKey("Player2ID");
 
                     b.HasOne("TermProject.Models.Tournament", null)
                         .WithMany("Duels")

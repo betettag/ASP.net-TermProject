@@ -21,9 +21,11 @@ namespace TermProject
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IWebHostEnvironment environment { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            environment = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -36,18 +38,18 @@ namespace TermProject
                 options.SuppressXFrameOptionsHeader = true;
                 // new API
                 options.Cookie.Name = "AntiforgeryCookie";
-                //options.Cookie.Domain = "contoso.com";
+                //options.Cookie.Domain = "https://internetagainsthumanity.azurewebsites.net/";
                 options.Cookie.Path = "/";
-                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
             services.AddSession(options =>
             {
                 // new API
                 options.Cookie.Name = "SessionCookie";
-                //options.Cookie.Domain = "contoso.com";
+                //options.Cookie.Domain = "https://internetagainsthumanity.azurewebsites.net/";
                 options.Cookie.Path = "/";
                 options.Cookie.HttpOnly = true;
-                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
 
@@ -75,8 +77,19 @@ namespace TermProject
 
             services.AddTransient<IRepository, Repository>();
             services.AddTransient<IPasswordValidator<Player>, CustomPasswordValidator>();
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
-                Configuration["ConnectionStrings:LocalDbConnection"]));
+
+            if (environment.IsDevelopment())
+            {
+                services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
+                 Configuration["ConnectionStrings:LocalDbConnection"]));//change for publishing
+            }
+            else
+            {
+                services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
+                Configuration["ConnectionStrings:Azure"]));//change for publishing
+            }
+
+
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
