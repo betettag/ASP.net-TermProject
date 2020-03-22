@@ -54,7 +54,7 @@
 
         @foreach (Duel d in duels)
         {
-            using (Html.BeginForm("Voted", "Home",FormMethod.Post))
+            using (Html.BeginForm("Voted", "Home"))
             {
                 <h5 class="text-center">@d.Prompt.Text</h5>
                 <div class="card-deck" style="justify-content:flex-end; justify-content:center;">

@@ -66,12 +66,12 @@ namespace TermProject.Controllers
                 //viewModel.duel.Players = new List<Player>();
                 //viewModel.duel.Players.Add(new Player());
                 //viewModel.duel.Players.Add(new Player());
-                return View(viewModel);
+                return View("Voting",viewModel);
             }
             return Index("Already voted");
         }
-        [HttpPost]
-        [Authorize(Roles = "Member, Admins")]
+        
+        [Authorize(Roles = "Member, Admins")][HttpPost]
         public async Task<IActionResult> Voted(VotingViewModel v)//post for after voting
         {
             Player player = await userManager.GetUserAsync(HttpContext.User);
