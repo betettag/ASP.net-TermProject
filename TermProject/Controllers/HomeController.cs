@@ -53,7 +53,7 @@ namespace TermProject.Controllers
         //    ViewBag.duelsCount = Repository.Tournaments[0].Duels.Count() - 1;//guest doesnt count
         //    return View ("Index",p);//returns home for a valid user
         //}
-        [Authorize(Roles = "Member, Admins")]
+        [Authorize]
         public async Task<IActionResult> Voting()//later tm
         {
             Repository.ResetTournament();
@@ -71,7 +71,7 @@ namespace TermProject.Controllers
             return Index("Already voted");
         }
         
-        [Authorize(Roles = "Member, Admins")][HttpPost]
+        [Authorize][HttpPost]
         public async Task<IActionResult> Voted(VotingViewModel v)//post for after voting
         {
             Player player = await userManager.GetUserAsync(HttpContext.User);
@@ -88,13 +88,13 @@ namespace TermProject.Controllers
             }
             return await Voting();
         }
-        [Authorize(Roles = "Member, Admins")]
+        [Authorize]
         public IActionResult AddCard()
         {
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Member, Admins")]
+        [Authorize]
         public async Task<IActionResult> AddCardValidation(Card card)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -130,7 +130,7 @@ namespace TermProject.Controllers
         {
             return View(Repository.Cards);
         }
-        [Authorize(Roles = "Member, Admins")]
+        [Authorize]
         public async Task<IActionResult> NewDuel()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -138,19 +138,31 @@ namespace TermProject.Controllers
 
             if (user.IsDueling == false)
             {//not going to let a user duel twice
-                return View("NewDuel",new AllCardsViewModels() { Cards = Repository.Cards,
-                    white_card = null, black_card = null });
+                Duel pending_duel = Repository.Tournaments[0].Duels.FirstOrDefault(d => d.Players.Count() == 1);
+                if (pending_duel != null)
+                    return View("NewDuel",new AllCardsViewModels() { 
+                        Cards = Repository.Cards,
+                        white_card = null,
+                        black_card = pending_duel.CardID
+                    });
+                else
+                    return View("NewDuel", new AllCardsViewModels()
+                    {
+                        Cards = Repository.Cards,
+                        white_card = null,
+                        black_card = null
+                    });
             }
             return Index("Already in a Duel");
         }
         
-        [Authorize(Roles = "Member, Admins")]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> NewDuelValidation(AllCardsViewModels v) 
         {
             var player = await userManager.GetUserAsync(HttpContext.User);
-            //if (v.white_card == null)//some validation
-            //    ModelState.AddModelError("Message", "please select a white card");
+            //if (v.white_card == Repository.Tournaments[0].Duels)//some future validation
+            //    ModelState.AddModelError("Message", "card already used");
 
             if (ModelState.IsValid) {
                 //find first open duel or create one
@@ -169,6 +181,11 @@ namespace TermProject.Controllers
             var players = Repository.Players;
 
             return View(players);
+        }
+        [AllowAnonymous]
+        public ActionResult Privacy()
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

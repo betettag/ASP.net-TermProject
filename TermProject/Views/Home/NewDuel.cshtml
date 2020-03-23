@@ -4,7 +4,16 @@
     ViewData["BootStrap"] = true;
     Random rnd = new Random();
     var cards = Model.Cards.Where(c => c.IsPrompt == false && c.CardID != 1 && c.CardID != 2).OrderBy(c => Guid.NewGuid()).Take(5);
-    var prompt = Model.Cards.Where(c => c.IsPrompt == true && c.Text != "Pick The Whiter Card. (There is a right answer)...").OrderBy(c => Guid.NewGuid()).First();
+    Card prompt;
+    if(Model.black_card == null || Model.black_card ==0)
+    {
+        prompt = Model.Cards.Where(c => c.IsPrompt == true && c.Text != "Pick The Whiter Card. (There is a right answer)...")
+                        .OrderBy(c => Guid.NewGuid()).FirstOrDefault();
+    }
+    else
+    {
+        prompt = Model.Cards.Where(c => c.CardID == Model.black_card).FirstOrDefault();
+    }
     //not picling special seeded cards
 }
 

@@ -41,6 +41,7 @@ namespace TermProject
                 //options.Cookie.Domain = "https://internetagainsthumanity.azurewebsites.net/";
                 options.Cookie.Path = "/";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.SuppressXFrameOptionsHeader = true;
             });
             services.AddSession(options =>
             {
@@ -51,8 +52,6 @@ namespace TermProject
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
-
-
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -98,7 +97,7 @@ namespace TermProject
                 options.LoginPath = "/Account/Login"; //to be changed
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
-                options.ReturnUrlParameter = "returnUrl";
+                //options.ReturnUrlParameter = "returnUrl";
             });
         }
 
@@ -106,40 +105,59 @@ namespace TermProject
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context, UserManager<Player> usrMgr, ILoggerFactory loggerFactory,
             RoleManager<IdentityRole> roleMgr)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    app.UseHsts();
+                }
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+                app.UseResponseCaching();
+                app.UseRouting();
+                app.UseAuthentication();
+                app.UseAuthorization();
+                app.UseHsts(hsts => hsts.MaxAge(365).IncludeSubdomains());
+                app.UseXContentTypeOptions();
+                app.UseReferrerPolicy(opts => opts.NoReferrer());
+                app.UseXXssProtection(options => options.EnabledWithBlockMode());
+                app.UseXfo(options => options.Deny());
+
             app.UseCookiePolicy();
             //app.UseCors(builder => builder
             //    .AllowAnyOrigin()
             //    .AllowAnyMethod()
             //    .AllowAnyHeader()
             //    .AllowCredentials());
-
             app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapControllers();
+                    endpoints.MapRazorPages();
+                });
+                context.Database.Migrate();
+                Task.Run(async () => { await SeedData.SeedAsync(context, usrMgr, roleMgr, Configuration); }).Wait();
+            app.Use(async (context, next) =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllers();
-                endpoints.MapRazorPages();
+                context.Response.OnStarting(() =>
+                {
+                    context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                    context.Response.Headers.Remove("Server");
+                    context.Response.Headers.Remove("X-Powered-By");
+                    context.Response.Headers.Remove("X-SourceFiles");
+                    context.Response.Headers.Add("Feature-Policy", "geolocation 'self'");
+                    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                    return Task.CompletedTask;
+                });
+                await next();
             });
-            context.Database.Migrate();
-            Task.Run(async () => { await SeedData.SeedAsync(context, usrMgr, roleMgr, Configuration); }).Wait();
         }
     }
 }

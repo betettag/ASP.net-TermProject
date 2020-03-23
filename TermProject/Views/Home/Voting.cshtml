@@ -3,7 +3,6 @@
     ViewData["Title"] = "Vote plz :<";
     ViewData["BootStrap"] = true;
     var duels = Model.Duels.FindAll(d => d.Players.Count() == 2 ).ToList();
-    int? sometihgn = null;
 }
 
 
@@ -48,8 +47,8 @@
 <body class="text-center" style="justify-content:center;">
     <h3>Please Vote or ill be crying :<</h3>
     <div class="white-text" style="background-color: black; justify-content:center;">
-        please dont vote for yourself
-        @Html.ValidationMessage("Validation")
+        please dont vote for yourself<br/>
+        <div class="text-warning">@Html.ValidationMessage("Validation")</div>
 
 
         @foreach (Duel d in duels)

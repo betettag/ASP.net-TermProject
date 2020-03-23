@@ -18,9 +18,10 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="/css/compiled-4.8.11.min.css">
-    <script src="https://kit.fontawesome.com/17b0e37242.js" crossorigin="anonymous"></script>
+    @*<script src="https://kit.fontawesome.com/17b0e37242.js" crossorigin="anonymous"></script>*@
     <script src="~/js/clipboard.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Roboto+Slab&display=swap" rel="stylesheet">
+    <script src="~/js/17b0e37242.js"></script>
+    <link href="~/css/roboto.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -66,7 +67,7 @@
                         @*<partial name="_LoginPartial" />*@
                         @if (user == null)
                         {
-                            <a class="nav-link waves-effect waves-light" id="login" asp-controller="Account" asp-action="Login"  asp-route-returnUrl=@Context.Request.Path>
+                            <a class="nav-link waves-effect waves-light" id="login" asp-controller="Account" asp-action="Login">
                                 Guest
                                 @("Login/Register Here")
                             </a>
@@ -131,16 +132,16 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - TermProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - TermProject - <a asp-area="" asp-controller="Home" asp-action="Index">Privacy</a>
         </div>
     </footer>
     @if ((bool)ViewData["BootStrap"] == true)
     {
         <environment include="Development">
-            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.ttf">
-            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Regular.ttf">
-            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Light.woff2">
-            <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/font/roboto/Roboto-Bold.woff2">
+            <link rel="stylesheet" type="text/css" href="~/lib/Roboto-Bold.ttf">
+            <link rel="stylesheet" type="text/css" href="~/lib/Roboto-Regular.ttf">
+            <link rel="stylesheet" type="text/css" href="~/lib/Roboto-Light.woff2">
+            <link rel="stylesheet" type="text/css" href="~/lib/Roboto-Bold.woff2">
             <script src="~/lib/jquery/dist/jquery.js"></script>
             <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         </environment>

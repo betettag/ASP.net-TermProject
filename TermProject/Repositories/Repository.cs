@@ -47,11 +47,15 @@ namespace TermProject.Repositories
                     CardID = black_card,//create new duel
                     Players = new List<Player>()
                 };
+                duel.Players.Add(player);
                 Tournaments[0].Duels.Add(duel);
             }
-            duel.Players.Add(player);//if it has found a spot ad another player
-            duel.Player2ID = player.Id;
-            player.IsDueling = true;
+            else {
+                duel.Players.Add(player);//if it has found a spot ad another player
+                duel.Player2ID = player.Id;
+                player.IsDueling = true;
+            }
+            
             //return;
 
 
