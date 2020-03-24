@@ -37,7 +37,7 @@ namespace TermProject.Repositories
         public Task AddPlayerToDuel(int black_card, int white_card, string playerId)
         {
             ResetTournament();//reset if needed
-            var player = Players.FirstOrDefault(p =>p.Id ==playerId);
+            var player = players.FirstOrDefault(p => p.Id ==playerId);
             var duel = Tournaments[0].Duels.Where(d => d.Players.Count() == 1 || d.Player2ID == null).FirstOrDefault();
             if (duel == null)
             {
@@ -49,13 +49,14 @@ namespace TermProject.Repositories
                     Players = new List<Player>()
                 };
                 duel.Players.Add(player);
-                player.IsDueling = true;
-                //context.SaveChanges();
-                return Task.CompletedTask;
+                Tournaments[0].Duels.Add(duel);
             }
-            duel.Players.Add(player);//if it has found a spot ad another player
-            duel.Player2ID = player.Id;
-            player.IsDueling = true;
+            else
+            {
+                duel.Players.Add(player);//if it has found a spot ad another player
+                duel.Player2ID = player.Id;
+                player.IsDueling = true;
+            }
             return Task.CompletedTask;
             //Player newPlayer = player;//store previous values if player is new
             //player = Players.Find(p => (p.UserName == player.UserName) && (p.Password == player.Password));//find user
@@ -101,40 +102,8 @@ namespace TermProject.Repositories
 
         public Task UpdateDuelVotesAndScore(string playerId)
         {
-            //bool flag;
-            //int Votes;
-            //int PlayerID;
-            //if (duel.VotesP1 == 0)
-            //{//modifying only one field and capturing variables
-            //    Votes = duel.VotesP2;
-            //    flag = false;
-            //    PlayerID = duel.Players[1].PlayerID;
-            //}
-            //else
-            //{
-            //    Votes = duel.VotesP1;
-            //    flag = true;
-            //    PlayerID = duel.Players[0].PlayerID;
-            //}
-            //Player player = Players.Find(p => p.PlayerID == duel.VoterID);
-            //Player player2 = Players.Find(p => p.PlayerID == Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID).Players.Find(p2 => p2.PlayerID == PlayerID).PlayerID);
-            //if (player.Equals(player2))
-            //    return Task.CompletedTask;
-            ////cant vote for yourself try again
-            //++player2.Score;
-            //ResetTournament();//reset if needed
-            //player.Voted = true;
-
-
-            //duel = Tournaments[0].Duels.Find(d => d.DuelID == duel.DuelID);
-            //if (flag)
-            //{
-            //    duel.VotesP2 = Votes;
-            //}
-            //else
-            //{
-            //    duel.VotesP1 = Votes;
-            //}
+            var player = Players.FirstOrDefault(p => p.Id == playerId);
+            ++player.Score;
             return Task.CompletedTask;
 
         }
